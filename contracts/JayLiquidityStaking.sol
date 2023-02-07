@@ -32,6 +32,8 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
 
     mapping(address => UserInfo) public userInfo;
 
+    bool public init = false;
+
     event Deposit(address indexed user, uint256 amount);
     event Harvest(address indexed user, uint256 harvestedAmount);
     event Withdraw(address indexed user, uint256 amount);
@@ -49,7 +51,8 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         address[] memory _addresses,
         uint256[] memory _balances
     ) public onlyOwner {
-        require(totalAmountStaked == 0, "Contract already initialized");
+        require(!init, "Contract already initialized");
+        init = true;
         uint256 total = 0;
         for (uint256 i = 0; i < _addresses.length; i++) {
             userInfo[_addresses[i]] = UserInfo({
