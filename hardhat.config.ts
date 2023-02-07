@@ -30,20 +30,20 @@ const config: HardhatUserConfig = {
   
     hardhat: {
       forking: {
-        url: "https://eth-mainnet.alchemyapi.io/v2/iukMtjXuL0nm24Gwp8wy_ul6hPF4FDEm",
+        url: "https://eth-mainnet.alchemyapi.io/v2/" + process.env.ALCHEMY_API,
       }
     },
 
     sep: {
-      url: "https://goerli.infura.io/v3/28c9e86d104c418384155940687a2b9b",
+      url: "https://goerli.infura.io/v3/"+ process.env.INFURA_API,
       accounts:
-        ['b84bea41804e6096a5f6f86c34b71bb2fcf679f9e0d3c4da49e598ed8a47e71a']
+        [process.env.PRIVATE_KEY1 || ""]
       ,
     },
     septest: {
-      url: "https://goerli.infura.io/v3/28c9e86d104c418384155940687a2b9b",
+      url: "https://goerli.infura.io/v3/" + process.env.INFURA_API,
       accounts:
-        ['7966b237e5da7668421f5b64cf0f199f13a5faf772f37d572007007f40376d77']
+        [process.env.PRIVATE_KEY2 || ""]
       ,
     },
   },
@@ -52,7 +52,7 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: "A7257M9X55EPEKRDUNV1Q4JH65YM7NKHIT",
+    apiKey: process.env.ETHERSCAN_API_KEY,
   },
 };
 
