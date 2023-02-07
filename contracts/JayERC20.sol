@@ -56,7 +56,7 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Check the price of Jay has increased
         // If not revert state, tx fails
-        //TO AUDITOR: would ideal like to remove if not necessary 
+        //TO AUDITOR: would ideally like to remove if not necessary 
         priceCheck();
 
         emit Price(block.timestamp, jay, eth);
@@ -75,7 +75,7 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Check the price of Jay has increased
         // If not revert state, tx fails
-        //TO AUDITOR: would ideal like to remove if not necessary 
+        //TO AUDITOR: would ideally like to remove if not necessary 
         priceCheck();
 
         emit Price(block.timestamp, jay, msg.value);
