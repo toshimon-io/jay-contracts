@@ -31,7 +31,6 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     constructor() payable ERC20("JayPeggers", "JAY") {
         _mint(msg.sender, msg.value * MIN);
         prevPrice = JAYtoETH(ETHinWEI);
-        //emit Price(block.timestamp, prevPrice);
     }
 
     //Will be set to 100m eth value after 1 hr
@@ -57,7 +56,8 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Check the price of Jay has increased
         // If not revert state, tx fails
-        //priceCheck();
+        //TO AUDITOR: would ideal like to remove if not necessary 
+        priceCheck();
 
         emit Price(block.timestamp, jay, eth);
     }
@@ -75,7 +75,8 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Check the price of Jay has increased
         // If not revert state, tx fails
-        //priceCheck();
+        //TO AUDITOR: would ideal like to remove if not necessary 
+        priceCheck();
 
         emit Price(block.timestamp, jay, msg.value);
     }
