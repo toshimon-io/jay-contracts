@@ -14,6 +14,7 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         payable(0x985B6B9064212091B4b325F68746B77262801BcB);
 
     uint256 public constant MIN = 1000;
+    uint256 public MAX = 1 * 10 ** 18;
 
     uint256 private prevPrice;
 
@@ -31,6 +32,11 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         _mint(msg.sender, msg.value * MIN);
         prevPrice = JAYtoETH(ETHinWEI);
         //emit Price(block.timestamp, prevPrice);
+    }
+
+    //Will be set to 100m eth value after 1 hr
+    setMax(uint256 _max) public onlyOwner(){
+        MAX = _max;
     }
 
     // Sell Jay
@@ -58,7 +64,7 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
     // Buy Jay
     function buy(address reciever) external payable nonReentrant {
-        require(msg.value > MIN, "must trade over min");
+        require(msg.value > MIN && msg.value < MAX, "must trade over min");
 
         // Mint Jay to sender
         uint256 jay = ETHtoJAY(msg.value);
