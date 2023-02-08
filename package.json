@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^0.4.1",
-    "@openzeppelin/contracts": "^4.7.0",
+    "@openzeppelin/contracts": "^4.8.1",
     "@uniswap/v3-periphery": "^1.4.3",
     "chainlink": "^0.8.2",
     "csv-parser": "^3.0.0",

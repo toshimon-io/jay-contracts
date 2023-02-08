@@ -23,11 +23,11 @@ contract JayFeeSplitter is Ownable, ReentrancyGuard {
 
     // Sell Jay
     function splitFees() external nonReentrant {
-        uint256 eth = address(this).balance;
+        uint256 eth = address(this).balance.div(3);
         if (eth > MIN) {
-            sendEth(TEAM_WALLET, eth.div(3));
-            sendEth(LP_WALLET, eth.div(3));
-            sendEth(NFT_WALLET, eth.div(3));
+            sendEth(TEAM_WALLET, eth);
+            sendEth(LP_WALLET, eth);
+            sendEth(NFT_WALLET, eth);
         }
     }
 
@@ -48,5 +48,10 @@ contract JayFeeSplitter is Ownable, ReentrancyGuard {
         require(success, "ETH Transfer failed.");
     }
 
+    //receiver helpers
+    function deposit() public payable {}
+
     receive() external payable {}
+
+    fallback() external payable {}
 }

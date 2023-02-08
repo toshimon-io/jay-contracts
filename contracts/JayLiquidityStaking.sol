@@ -14,7 +14,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
 
     JayFeeSplitter FEE_ADDRESS;
 
-    uint256 private FACTOR = 10 ** 18;
+    uint256 private constant FACTOR = 10 ** 18;
 
     IERC20 public immutable liquidityToken;
 
@@ -75,21 +75,23 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
      *    - @param 2: Value
      * Return: n/a
      */
-    function sendEth(address _address, uint256 _value) private {
-        (bool success, ) = _address.call{value: _value}("");
+    function sendEth(uint256 _value) private {
+        (bool success, ) = msg.sender.call{value: _value}("");
         require(success, "ETH Transfer failed.");
     }
 
     /**
      * @notice Claim reward tokens that are pending
      */
-    function claim() internal {
+    function claim() private returns (uint256) {
         // Retrieve pending rewards
         FEE_ADDRESS.splitFees();
 
+        uint256 contactBalance = address(this).balance;
+
         rewardPerTokenStored =
             rewardPerTokenStored +
-            (address(this).balance.sub(previusRewardTotal)).mul(FACTOR).div(
+            (contactBalance.sub(previusRewardTotal)).mul(FACTOR).div(
                 totalAmountStaked
             );
 
@@ -102,12 +104,10 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
             )
             .div(FACTOR);
 
-        // Transfer reward token to sender
-        if (pendingRewards > 0) {
-            sendEth(msg.sender, pendingRewards);
-        }
-        previusRewardTotal = address(this).balance;
+        previusRewardTotal = contactBalance.sub(pendingRewards);
+
         emit Harvest(msg.sender, pendingRewards);
+        return pendingRewards;
     }
 
     /**
@@ -115,14 +115,12 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
      * @dev There is a limit of 1 LOOKS per deposit to prevent potential manipulation of current shares
      */
     function deposit(uint256 amount) external nonReentrant {
-        if (totalAmountStaked > 0) claim();
+        uint256 pendingRewards = 0;
+        if (totalAmountStaked > 0) pendingRewards = claim();
         else {
             rewardPerTokenStored = 0;
             previusRewardTotal = 0;
         }
-
-        // Transfer LOOKS tokens to this address
-        liquidityToken.safeTransferFrom(msg.sender, address(this), amount);
 
         userInfo[msg.sender].shares += amount;
 
@@ -131,6 +129,11 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         // Increase totalAmountStaked
         totalAmountStaked += amount;
 
+        liquidityToken.safeTransferFrom(msg.sender, address(this), amount);
+
+        if (pendingRewards > 0) {
+            sendEth(pendingRewards);
+        }
         emit Deposit(msg.sender, amount);
     }
 
@@ -138,10 +141,9 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
      * @notice Withdraw staked tokens (and collect reward tokens if requested)
      */
     function withdraw(uint256 amount) external nonReentrant {
-        claim();
+        uint256 pendingRewards = claim();
 
         // Transfer LOOKS tokens to the sender
-        liquidityToken.safeTransfer(msg.sender, userInfo[msg.sender].shares);
 
         userInfo[msg.sender].shares -= amount;
 
@@ -149,6 +151,12 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
 
         // Adjust total amount staked
         totalAmountStaked -= amount;
+
+        liquidityToken.safeTransfer(msg.sender, userInfo[msg.sender].shares);
+
+        if (pendingRewards > 0) {
+            sendEth(pendingRewards);
+        }
 
         emit Withdraw(msg.sender, amount);
     }

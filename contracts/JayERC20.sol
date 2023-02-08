@@ -14,7 +14,7 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         payable(0x985B6B9064212091B4b325F68746B77262801BcB);
 
     uint256 public constant MIN = 1000;
-    uint256 public MAX = 1 * 10 ** 18;
+    uint256 public MAX = 1 * 10 ** 28;
 
     uint256 private prevPrice;
 
@@ -137,4 +137,10 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
                 .div(totalSupply())
                 .div(FEE_BASE_1000);
     }
+
+    function deposit() public payable {}
+
+    receive() external payable {}
+
+    fallback() external payable {}
 }

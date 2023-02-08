@@ -34,16 +34,16 @@ contract JayMart is Ownable {
         payable(0x985B6B9064212091B4b325F68746B77262801BcB);
 
     // Create variable to hold contract address
-    address payable private JAY_ADDRESS;
+    address payable private immutable JAY_ADDRESS;
 
     // Define new IJAY interface
-    IJAY private JAY;
+    IJAY private immutable JAY;
 
     // Define some constant variables
     uint256 private constant SELL_NFT_PAYOUT = 2;
     uint256 private constant SELL_NFT_FEE_VAULT = 4;
     uint256 private constant SELL_NFT_FEE_TEAM = 4;
-    uint256 private constant BUY_NFT_FEE_VAULT = 2;
+
     uint256 private constant BUY_NFT_FEE_TEAM = 2;
     uint256 private constant USD_PRICE_SELL = 2 * 10 ** 18;
     uint256 private constant USD_PRICE_BUY = 10 * 10 ** 18;
@@ -63,6 +63,7 @@ contract JayMart is Ownable {
     // Constructor
     constructor(address _jayAddress) {
         JAY = IJAY(_jayAddress);
+        JAY_ADDRESS = payable(_jayAddress);
         priceFeed = AggregatorV3Interface(
             0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419
         ); //main
@@ -108,6 +109,9 @@ contract JayMart is Ownable {
         // Transfer ERC1155 NFTs
         total += buyERC1155(erc1155TokenAddress, erc1155Ids, erc1155Amounts);
 
+        // Increase NFTs bought
+        nftsBought += total;
+
         // Calculate Jay fee
         uint256 _fee = total.mul(buyNftFeeEth);
 
@@ -120,9 +124,6 @@ contract JayMart is Ownable {
 
         // Initiate burn method
         JAY.burnFrom(msg.sender, _fee);
-
-        // Increase NFTs bought
-        nftsBought += total;
     }
 
     /*
@@ -143,6 +144,10 @@ contract JayMart is Ownable {
         uint256[] calldata erc1155Ids,
         uint256[] calldata erc1155Amounts
     ) public payable {
+        uint256 teamFee = msg.value.div(SELL_NFT_FEE_TEAM);
+        uint256 jayFee = msg.value.div(SELL_NFT_FEE_VAULT);
+        uint256 userValue = msg.value.div(SELL_NFT_PAYOUT);
+
         uint256 total = erc721TokenAddress.length;
 
         // Transfer ERC721 NFTs
@@ -155,6 +160,10 @@ contract JayMart is Ownable {
             erc1155Amounts
         );
 
+        // Increase nftsSold variable
+
+        nftsSold += total;
+
         // Calculate fee
         uint256 _fee = total >= 100
             ? (total).mul(sellNftFeeEth).div(2)
@@ -164,15 +173,11 @@ contract JayMart is Ownable {
         require(msg.value >= _fee, "You need to pay more ETH.");
 
         // Send fees to their designated wallets
-        sendEth(TEAM_WALLET, msg.value.div(SELL_NFT_FEE_TEAM));
-        sendEth(JAY_ADDRESS, msg.value.div(SELL_NFT_FEE_VAULT));
+        sendEth(TEAM_WALLET, teamFee);
+        sendEth(JAY_ADDRESS, jayFee);
 
         // buy JAY
-        JAY.buy{value: address(this).balance}(msg.sender);
-
-        // Increase nftsSold variable
-
-        nftsSold += total;
+        JAY.buy{value: userValue}(msg.sender);
     }
 
     /*
@@ -349,14 +354,22 @@ contract JayMart is Ownable {
 
     fallback() external payable {}
 
-    function onERC1155Received() external pure returns (bytes4) {
-        return IERC1155Receiver.onERC1155Received.selector;
+    function onERC1155Received(
+        address,
+        address,
+        uint256,
+        uint256,
+        bytes memory
+    ) public virtual returns (bytes4) {
+        return this.onERC1155Received.selector;
     }
 
-    function onERC721Received() external pure returns (bytes4) {
-        return
-            bytes4(
-                keccak256("onERC721Received(address,address,uint256,bytes)")
-            );
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes memory
+    ) public virtual returns (bytes4) {
+        return this.onERC721Received.selector;
     }
 }

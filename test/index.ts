@@ -101,30 +101,30 @@ describe("JAY contract", function () {
 
 
     //
-   /*
+   
     await(await owner.sendTransaction(tx)).wait();
     console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
     console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
 
-    await (await jayLiquidityStaking.connect(owner).deposit(stakeAmount)).wait();
-
-    await(await owner.sendTransaction(tx)).wait();
-    console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
-    console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
-
-
-    await(await owner.sendTransaction(tx)).wait();
-
-    console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
-    console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
-
-    await(await jayLiquidityStaking.connect(owner).withdraw(stakeAmount)).wait();
+    await (await jayLiquidityStaking.connect(owner).deposit(10000000000)).wait();
 
     await(await owner.sendTransaction(tx)).wait();
     console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
     console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
 
-*/
+
+    await(await owner.sendTransaction(tx)).wait();
+
+    console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
+    console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
+
+    await(await jayLiquidityStaking.connect(owner).withdraw(10000000000)).wait();
+
+    await(await owner.sendTransaction(tx)).wait();
+    console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
+    console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
+
+
     
 
     const signers = await ethers.getSigners();
@@ -153,52 +153,31 @@ describe("JAY contract", function () {
       }
      
       if(tot > 100){
-        await(await JayFeeSplitter.splitFees()).wait()
+        await(await jayLiquidityStaking.deposit(0)).wait()
         break;
       }
   
     }
+    await(await jayLiquidityStaking.deposit("1000000000000000")).wait()
     console.log("___________________________")
     console.log(ethers.utils.formatEther(await provider.getBalance( JayFeeSplitter.address)));
     console.log("")
     console.log("1% Fee To Jay Backing")
     console.log("")
     console.log("LP Rewards   : " +  ethers.utils.formatEther(await jayLiquidityStaking.getBal()));
-    console.log("LP Rewards   : " +  ethers.utils.formatEther(await jayLiquidityStaking.getBal()));
+    console.log("User Rewards   : " +  ethers.utils.formatEther(await jayLiquidityStaking.getReward(owner.address)));
 
     //console.log("ower  : " +  ethers.utils.formatEther(await jayLiquidityStaking.connect(owner).getReward("0x12d024ea9d20232380d7b6a7e64b114469ecbbec")));
     console.log("Jay Price    : " +  ethers.utils.formatEther(await JAY.JAYtoETH("1000000000000000000")));
     console.log("")
     console.log("___________________________")
-   /* for (let i=2; i < 20; i++) {
-//      await(await signers[i].sendTransaction(tx)).wait();
-      console.log("ower  : " +  await jayLiquidityStaking.connect(signers[i]).getReward(signers[i].address));
-      await(await jayLiquidityStaking.connect(signers[i]).withdraw(stakeAmount)).wait();
-      console.log("owerMAin  : " +  await jayLiquidityStaking.connect(signers[1]).getReward(signers[1].address));
-      console.log("bal   : " +  await jayLiquidityStaking.getBal());
-      console.log("tot   : " +  await jayLiquidityStaking.getTotalStaked());
 
-
-    }
-    await(await owner.sendTransaction(tx)).wait();
-    await( await JAY.connect(signers[1]).buy(owner.address, { value: 100000000000000 })).wait();
-    console.log("ower  : " +  await jayLiquidityStaking.connect(signers[1]).getReward(signers[1].address));
-    await(await jayLiquidityStaking.connect(signers[1]).deposit(0)).wait();
-    console.log("ower  : " +  await jayLiquidityStaking.connect(signers[1]).getReward(signers[1].address));
-    console.log("bal   : " +  await jayLiquidityStaking.getBal());
-    console.log("tot   : " +  await jayLiquidityStaking.getTotalStaked());
-    await(await jayLiquidityStaking.connect(signers[1]).withdraw("5000000000000000000")).wait();
-    console.log("owerMAin  : " +  await jayLiquidityStaking.connect(signers[1]).getReward(signers[1].address));
-    console.log("bal   : " +  await jayLiquidityStaking.getBal());
-    console.log("tot   : " +  await jayLiquidityStaking.getTotalStaked());
-    await(await jayLiquidityStaking.connect(signers[1]).withdraw("5000000000000000000")).wait();
-*/
   });
   
 });
       
 
- /* describe("Transactions", function () {
+ describe("Transactions", function () {
     it("Should buy and sell tokens correctly", async function () {
        
       // Buy JAY tokens
@@ -467,5 +446,5 @@ describe("JAY contract", function () {
     
 
   });
-  */
+  
 });
