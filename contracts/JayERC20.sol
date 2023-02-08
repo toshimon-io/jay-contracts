@@ -34,7 +34,7 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     }
 
     //Will be set to 100m eth value after 1 hr
-    setMax(uint256 _max) public onlyOwner(){
+    function setMax(uint256 _max) public onlyOwner {
         MAX = _max;
     }
 
@@ -56,8 +56,8 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Check the price of Jay has increased
         // If not revert state, tx fails
-        //TO AUDITOR: would ideally like to remove if not necessary 
-        priceCheck();
+        //TO AUDITOR: would ideally like to remove if not necessary
+        //priceCheck();
 
         emit Price(block.timestamp, jay, eth);
     }
@@ -75,8 +75,8 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Check the price of Jay has increased
         // If not revert state, tx fails
-        //TO AUDITOR: would ideally like to remove if not necessary 
-        priceCheck();
+        //TO AUDITOR: would ideally like to remove if not necessary
+        //priceCheck();
 
         emit Price(block.timestamp, jay, msg.value);
     }
@@ -125,16 +125,16 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         return
             amount
                 .mul(totalSupply())
-                .div(address(this).balance)
                 .mul(BUY_FEE)
+                .div(address(this).balance)
                 .div(FEE_BASE_1000);
     }
 
     function getSellJay(uint256 amount) public view returns (uint256) {
         return
             (amount * address(this).balance)
-                .div(totalSupply())
                 .mul(SELL_FEE)
+                .div(totalSupply())
                 .div(FEE_BASE_1000);
     }
 }

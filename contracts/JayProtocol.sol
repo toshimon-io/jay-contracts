@@ -5,26 +5,12 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 
+import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
-interface IERC721 {
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
-}
-
-interface IERC1155 {
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes calldata data
-    ) external;
-}
 
 interface IJAY {
     function sell(uint256 value) external;
@@ -289,7 +275,14 @@ contract JayMart is Ownable {
         return amount;
     }
 
-    // chainlink pricefeed / fee updater
+    function getPriceSell(uint256 total) public view returns (uint256) {
+        return total * sellNftFeeEth;
+    }
+
+    function getPriceBuy(uint256 total) public view returns (uint256) {
+        return total * buyNftFeeEth;
+    }
+
     function getFees()
         public
         view
@@ -310,13 +303,7 @@ contract JayMart is Ownable {
      */
     function updateFees() public returns (uint256, uint256, uint256, uint256) {
         // Get latest price feed
-        (
-            uint80 roundID,
-            int256 price,
-            uint256 startedAt,
-            uint256 timeStamp,
-            uint80 answeredInRound
-        ) = priceFeed.latestRoundData();
+        (, int256 price, , uint256 timeStamp, ) = priceFeed.latestRoundData();
 
         uint256 _price = uint256(price).mul(1 * 10 ** 10);
         require(timeStamp > nextFeeUpdate, "Fee update every 24 hrs");
@@ -351,13 +338,7 @@ contract JayMart is Ownable {
     }
 
     function getLatestPrice() public view returns (int256) {
-        (
-            uint80 roundID,
-            int256 price,
-            uint256 startedAt,
-            uint256 timeStamp,
-            uint80 answeredInRound
-        ) = priceFeed.latestRoundData();
+        (, int256 price, , , ) = priceFeed.latestRoundData();
         return price;
     }
 
@@ -368,22 +349,11 @@ contract JayMart is Ownable {
 
     fallback() external payable {}
 
-    function onERC1155Received(
-        address,
-        address from,
-        uint256 id,
-        uint256 amount,
-        bytes calldata data
-    ) external pure returns (bytes4) {
+    function onERC1155Received() external pure returns (bytes4) {
         return IERC1155Receiver.onERC1155Received.selector;
     }
 
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external pure returns (bytes4) {
+    function onERC721Received() external pure returns (bytes4) {
         return
             bytes4(
                 keccak256("onERC721Received(address,address,uint256,bytes)")
