@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
@@ -21,7 +21,12 @@ contract JayFeeSplitter is Ownable, ReentrancyGuard {
 
     constructor() {}
 
-    // Sell Jay
+    /*
+     * Name: splitFees
+     * Purpose: Tranfer ETH to staking contracts and team
+     * Parameters: n/a
+     * Return: n/a
+     */
     function splitFees() external nonReentrant {
         uint256 eth = address(this).balance.div(3);
         if (eth > MIN) {
@@ -43,6 +48,14 @@ contract JayFeeSplitter is Ownable, ReentrancyGuard {
         LP_WALLET = payable(_address);
     }
 
+    /*
+     * Name: sendEth
+     * Purpose: Tranfer ETH tokens
+     * Parameters:
+     *    - @param 1: Address
+     *    - @param 2: Value
+     * Return: n/a
+     */
     function sendEth(address _address, uint256 _value) internal {
         (bool success, ) = _address.call{value: _value}("");
         require(success, "ETH Transfer failed.");

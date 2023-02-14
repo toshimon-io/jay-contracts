@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
@@ -12,6 +12,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
 interface IJAY {
     function sell(uint256 value) external;
 
@@ -22,7 +24,7 @@ interface IJAY {
     function ETHtoJAY(uint256 value) external view returns (uint256);
 }
 
-contract JayMart is Ownable {
+contract JayMart is Ownable, ReentrancyGuard {
     // Use SafeMath for all calculations including uint256's
     using SafeMath for uint256;
 
@@ -99,7 +101,7 @@ contract JayMart is Ownable {
         address[] calldata erc1155TokenAddress,
         uint256[] calldata erc1155Ids,
         uint256[] calldata erc1155Amounts
-    ) public payable {
+    ) external payable nonReentrant {
         // Calculate total
         uint256 total = erc721TokenAddress.length;
 
@@ -123,7 +125,7 @@ contract JayMart is Ownable {
         sendEth(JAY_ADDRESS, address(this).balance);
 
         // Initiate burn method
-        JAY.burnFrom(msg.sender, _fee);
+        JAY.burnFrom(msg.sender, total.mul(buyNftFeeJay));
     }
 
     /*
@@ -143,7 +145,7 @@ contract JayMart is Ownable {
         address[] calldata erc1155TokenAddress,
         uint256[] calldata erc1155Ids,
         uint256[] calldata erc1155Amounts
-    ) public payable {
+    ) external payable nonReentrant {
         uint256 teamFee = msg.value.div(SELL_NFT_FEE_TEAM);
         uint256 jayFee = msg.value.div(SELL_NFT_FEE_VAULT);
         uint256 userValue = msg.value.div(SELL_NFT_PAYOUT);
@@ -306,7 +308,11 @@ contract JayMart is Ownable {
      * Parameters: n/a
      * Return: Array of uint256: NFT Sell Fee (ETH), NFT Buy Fee (ETH), NFT Buy Fee (JAY), time of next update
      */
-    function updateFees() public returns (uint256, uint256, uint256, uint256) {
+    function updateFees()
+        external
+        nonReentrant
+        returns (uint256, uint256, uint256, uint256)
+    {
         // Get latest price feed
         (, int256 price, , uint256 timeStamp, ) = priceFeed.latestRoundData();
 

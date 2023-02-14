@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -87,14 +87,17 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         // Retrieve pending rewards
         FEE_ADDRESS.splitFees();
 
+        // Get the balance of the contract
         uint256 contactBalance = address(this).balance;
 
+        // Update rewardPerTokenStored in contract state after rewards are added from FEE_ADDRESS
         rewardPerTokenStored =
             rewardPerTokenStored +
             (contactBalance.sub(previusRewardTotal)).mul(FACTOR).div(
                 totalAmountStaked
             );
 
+        // Get the users pending rewards based on their current share balance
         uint256 pendingRewards = userInfo[msg.sender]
             .shares
             .mul(
@@ -104,6 +107,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
             )
             .div(FACTOR);
 
+        // Save the contract balance so it equals the balaance AFTER the users eth is tranfered in deposit/withdraw
         previusRewardTotal = contactBalance.sub(pendingRewards);
 
         emit Harvest(msg.sender, pendingRewards);
@@ -111,10 +115,11 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
     }
 
     /**
-     * @notice Deposit staked tokens (and collect reward tokens if requested)
-     * @dev There is a limit of 1 LOOKS per deposit to prevent potential manipulation of current shares
+     * @notice Deposit staked tokens and collect reward tokens
      */
     function deposit(uint256 amount) external nonReentrant {
+        // Get the users pending rewards and update contract state
+        // If no tokens are currently staked reset the contract
         uint256 pendingRewards = 0;
         if (totalAmountStaked > 0) pendingRewards = claim();
         else {
@@ -122,15 +127,17 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
             previusRewardTotal = 0;
         }
 
+        // Update the users share information
         userInfo[msg.sender].shares += amount;
-
         _setUserEntry();
 
         // Increase totalAmountStaked
         totalAmountStaked += amount;
 
+        // Transfer liquidity from user to contract
         liquidityToken.safeTransferFrom(msg.sender, address(this), amount);
 
+        // Send pending eth reward to user
         if (pendingRewards > 0) {
             sendEth(pendingRewards);
         }
@@ -138,22 +145,23 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
     }
 
     /**
-     * @notice Withdraw staked tokens (and collect reward tokens if requested)
+     * @notice Withdraw staked tokens and collect reward tokens
      */
     function withdraw(uint256 amount) external nonReentrant {
+        // Get the users pending rewards and update contract state
         uint256 pendingRewards = claim();
 
-        // Transfer LOOKS tokens to the sender
-
+        // Update the users share information
         userInfo[msg.sender].shares -= amount;
-
         _setUserEntry();
 
         // Adjust total amount staked
         totalAmountStaked -= amount;
 
+        // Transfer liquidity to user from contract
         liquidityToken.safeTransfer(msg.sender, userInfo[msg.sender].shares);
 
+        // Send pending eth reward to user
         if (pendingRewards > 0) {
             sendEth(pendingRewards);
         }
@@ -182,6 +190,14 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         }
     }
 
+    function _setUserEntry() internal {
+        if (userInfo[msg.sender].shares == 0) {
+            userInfo[msg.sender].rewardPerTokenOnEntry = 0;
+        } else {
+            userInfo[msg.sender].rewardPerTokenOnEntry = rewardPerTokenStored;
+        }
+    }
+
     function getStaked(address _address) public view returns (uint256) {
         return userInfo[_address].shares;
     }
@@ -202,14 +218,6 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
                     totalAmountStaked
                 );
         else return 0;
-    }
-
-    function _setUserEntry() internal {
-        if (userInfo[msg.sender].shares == 0) {
-            userInfo[msg.sender].rewardPerTokenOnEntry = 0;
-        } else {
-            userInfo[msg.sender].rewardPerTokenOnEntry = rewardPerTokenStored;
-        }
     }
 
     receive() external payable {}

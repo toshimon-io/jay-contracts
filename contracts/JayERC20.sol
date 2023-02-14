@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
@@ -30,6 +30,7 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
     constructor() payable ERC20("JayPeggers", "JAY") {
         _mint(msg.sender, msg.value * MIN);
+        transfer(0x000000000000000000000000000000000000dEaD, 10000);
         prevPrice = JAYtoETH(ETHinWEI);
     }
 
