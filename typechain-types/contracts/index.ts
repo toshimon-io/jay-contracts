@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type * as jayErc20Sol from "./JayERC20.sol";
 export type { jayErc20Sol };
+import type * as jayMartSol from "./JayMart.sol";
+export type { jayMartSol };
 import type * as jayProtocolSol from "./JayProtocol.sol";
 export type { jayProtocolSol };
 import type * as test from "./test";

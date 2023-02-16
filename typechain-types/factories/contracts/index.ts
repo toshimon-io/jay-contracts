@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as jayErc20Sol from "./JayERC20.sol";
+export * as jayMartSol from "./JayMart.sol";
 export * as jayProtocolSol from "./JayProtocol.sol";
 export * as test from "./test";
 export { JayFeeSplitter__factory } from "./JayFeeSplitter__factory";

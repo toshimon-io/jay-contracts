@@ -64,7 +64,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         }
         require(total == _initialLPs, "Totals dont match");
         totalAmountStaked = total;
-        liquidityToken.safeTransferFrom(msg.sender, address(this), _initialLPs);
+        liquidityToken.transferFrom(msg.sender, address(this), _initialLPs);
     }
 
     /*

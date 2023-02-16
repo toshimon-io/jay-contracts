@@ -3,6 +3,10 @@
 /* eslint-disable */
 import type * as erc20Sol from "./ERC20.sol";
 export type { erc20Sol };
+import type * as uniswapV2FactorySol from "./UniswapV2factory.sol";
+export type { uniswapV2FactorySol };
+import type * as uniswapVRouter02Sol from "./UniswapV@Router02.sol";
+export type { uniswapVRouter02Sol };
 import type * as erc1155Sol from "./erc1155.sol";
 export type { erc1155Sol };
 import type * as nftSol from "./nft.sol";
