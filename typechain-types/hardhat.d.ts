@@ -101,14 +101,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.JayMart__factory>;
     getContractFactory(
-      name: "IJAY",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IJAY__factory>;
-    getContractFactory(
-      name: "JayMart",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.JayMart__factory>;
-    getContractFactory(
       name: "RockPaperScissors",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.RockPaperScissors__factory>;
@@ -289,16 +281,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.JayLiquidityStaking>;
-    getContractAt(
-      name: "IJAY",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IJAY>;
-    getContractAt(
-      name: "JayMart",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.JayMart>;
     getContractAt(
       name: "IJAY",
       address: string,

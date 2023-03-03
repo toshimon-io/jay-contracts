@@ -159,7 +159,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         totalAmountStaked -= amount;
 
         // Transfer liquidity to user from contract
-        liquidityToken.safeTransfer(msg.sender, userInfo[msg.sender].shares);
+        liquidityToken.safeTransfer(msg.sender, amount);
 
         // Send pending eth reward to user
         if (pendingRewards > 0) {
@@ -172,7 +172,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
     function getReward(address _address) public view returns (uint256) {
         if (totalAmountStaked > 0) {
             uint256 _rewardPerTokenStored = rewardPerTokenStored +
-                (address(this).balance.sub(previusRewardTotal)).mul(FACTOR).div(
+                (address(this).balance.add(address(FEE_ADDRESS).balance).sub(previusRewardTotal)).mul(FACTOR).div(
                     totalAmountStaked
                 );
 
@@ -214,7 +214,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         if (totalAmountStaked > 0)
             return
                 rewardPerTokenStored +
-                (address(this).balance.sub(previusRewardTotal)).mul(FACTOR).div(
+                (address(this).balance.add(address(FEE_ADDRESS).balance).sub(previusRewardTotal)).mul(FACTOR).div(
                     totalAmountStaked
                 );
         else return 0;
