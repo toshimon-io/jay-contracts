@@ -1,14 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
-    using SafeMath for uint256;
 
     address payable private FEE_ADDRESS =
         payable(0x985B6B9064212091B4b325F68746B77262801BcB);
