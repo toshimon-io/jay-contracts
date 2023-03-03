@@ -23,13 +23,11 @@ interface IJAY {
 }
 
 contract JayMart is Ownable, ReentrancyGuard {
-
     // Define our price feed interface
     AggregatorV3Interface internal priceFeed;
 
     // Create variable to hold the team wallet address
-    address payable private constant TEAM_WALLET =
-        payable(0x985B6B9064212091B4b325F68746B77262801BcB);
+    address payable private TEAM_WALLET;
 
     // Create variable to hold contract address
     address payable private immutable JAY_ADDRESS;
@@ -56,15 +54,20 @@ contract JayMart is Ownable, ReentrancyGuard {
     uint256 private sellNftFeeEth = 0.001 * 10 ** 18;
 
     // Create variable to hold when the next fee update can occur
-    uint256 private nextFeeUpdate = block.timestamp.add(7 days);
+    uint256 private nextFeeUpdate = block.timestamp + (7 days);
 
     // Constructor
     constructor(address _jayAddress) {
         JAY = IJAY(_jayAddress);
         JAY_ADDRESS = payable(_jayAddress);
+        setTEAMWallet(0x985B6B9064212091B4b325F68746B77262801BcB);
         priceFeed = AggregatorV3Interface(
             0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419
         ); //main
+    }
+
+    function setTEAMWallet(address _address) public onlyOwner {
+        TEAM_WALLET = payable(_address);
     }
 
     /*
@@ -111,17 +114,17 @@ contract JayMart is Ownable, ReentrancyGuard {
         nftsBought += total;
 
         // Calculate Jay fee
-        uint256 _fee = total.mul(buyNftFeeEth);
+        uint256 _fee = total * (buyNftFeeEth);
 
         // Make sure enough ETH is present
         require(msg.value >= _fee, "You need to pay more ETH.");
 
         // Send fees to designated wallets
-        sendEth(TEAM_WALLET, msg.value.div(BUY_NFT_FEE_TEAM));
+        sendEth(TEAM_WALLET, msg.value / (BUY_NFT_FEE_TEAM));
         sendEth(JAY_ADDRESS, address(this).balance);
 
         // Initiate burn method
-        JAY.burnFrom(msg.sender, total.mul(buyNftFeeJay));
+        JAY.burnFrom(msg.sender, total * (buyNftFeeJay));
     }
 
     /*
@@ -142,9 +145,9 @@ contract JayMart is Ownable, ReentrancyGuard {
         uint256[] calldata erc1155Ids,
         uint256[] calldata erc1155Amounts
     ) external payable nonReentrant {
-        uint256 teamFee = msg.value.div(SELL_NFT_FEE_TEAM);
-        uint256 jayFee = msg.value.div(SELL_NFT_FEE_VAULT);
-        uint256 userValue = msg.value.div(SELL_NFT_PAYOUT);
+        uint256 teamFee = msg.value / (SELL_NFT_FEE_TEAM);
+        uint256 jayFee = msg.value / (SELL_NFT_FEE_VAULT);
+        uint256 userValue = msg.value / (SELL_NFT_PAYOUT);
 
         uint256 total = erc721TokenAddress.length;
 
@@ -164,8 +167,8 @@ contract JayMart is Ownable, ReentrancyGuard {
 
         // Calculate fee
         uint256 _fee = total >= 100
-            ? (total).mul(sellNftFeeEth).div(2)
-            : (total).mul(sellNftFeeEth);
+            ? ((total) * (sellNftFeeEth)) / (2)
+            : (total) * (sellNftFeeEth);
 
         // Make sure enough ETH is present
         require(msg.value >= _fee, "You need to pay more ETH.");
@@ -215,7 +218,7 @@ contract JayMart is Ownable, ReentrancyGuard {
     ) internal returns (uint256) {
         uint256 amount = 0;
         for (uint256 id = 0; id < ids.length; id++) {
-            amount = amount.add(amounts[id]);
+            amount = amount * (amounts[id]);
             IERC1155(_tokenAddress[id]).safeTransferFrom(
                 address(this),
                 msg.sender,
@@ -266,7 +269,7 @@ contract JayMart is Ownable, ReentrancyGuard {
     ) internal returns (uint256) {
         uint256 amount = 0;
         for (uint256 id = 0; id < ids.length; id++) {
-            amount = amount.add(amounts[id]);
+            amount = amount + (amounts[id]);
             IERC1155(_tokenAddress[id]).safeTransferFrom(
                 msg.sender,
                 address(this),
@@ -312,35 +315,35 @@ contract JayMart is Ownable, ReentrancyGuard {
         // Get latest price feed
         (, int256 price, , uint256 timeStamp, ) = priceFeed.latestRoundData();
 
-        uint256 _price = uint256(price).mul(1 * 10 ** 10);
+        uint256 _price = uint256(price) * (1 * 10 ** 10);
         require(timeStamp > nextFeeUpdate, "Fee update every 24 hrs");
 
         uint256 _sellNftFeeEth;
         if (_price > USD_PRICE_SELL) {
-            uint256 _p = _price.div(USD_PRICE_SELL);
-            _sellNftFeeEth = uint256(1 * 10 ** 18).div(_p);
+            uint256 _p = _price / (USD_PRICE_SELL);
+            _sellNftFeeEth = uint256(1 * 10 ** 18) / (_p);
         } else {
-            _sellNftFeeEth = USD_PRICE_SELL.div(_price);
+            _sellNftFeeEth = USD_PRICE_SELL / (_price);
         }
 
         require(
             owner() == msg.sender ||
-                (sellNftFeeEth.div(2) < _sellNftFeeEth &&
-                    sellNftFeeEth.mul(150) > _sellNftFeeEth),
+                (sellNftFeeEth / (2) < _sellNftFeeEth &&
+                    sellNftFeeEth * (150) > _sellNftFeeEth),
             "Fee swing too high"
         );
 
         sellNftFeeEth = _sellNftFeeEth;
 
         if (_price > USD_PRICE_BUY) {
-            uint256 _p = _price.div(USD_PRICE_BUY);
-            buyNftFeeEth = uint256(1 * 10 ** 18).div(_p);
+            uint256 _p = _price / (USD_PRICE_BUY);
+            buyNftFeeEth = uint256(1 * 10 ** 18) / (_p);
         } else {
-            buyNftFeeEth = USD_PRICE_BUY.div(_price);
+            buyNftFeeEth = USD_PRICE_BUY / (_price);
         }
         buyNftFeeJay = JAY.ETHtoJAY(buyNftFeeEth);
 
-        nextFeeUpdate = timeStamp.add(24 hours);
+        nextFeeUpdate = timeStamp + (24 hours);
         return (sellNftFeeEth, buyNftFeeEth, buyNftFeeJay, nextFeeUpdate);
     }
 

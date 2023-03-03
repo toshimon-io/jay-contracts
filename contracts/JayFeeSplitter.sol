@@ -6,13 +6,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract JayFeeSplitter is Ownable, ReentrancyGuard {
-
-    address payable private TEAM_WALLET =
-        payable(0x985B6B9064212091B4b325F68746B77262801BcB);
-    address payable private LP_WALLET =
-        payable(0x985B6B9064212091B4b325F68746B77262801BcB);
-    address payable private NFT_WALLET =
-        payable(0x985B6B9064212091B4b325F68746B77262801BcB);
+    address payable private TEAM_WALLET;
+    address payable private LP_WALLET;
+    address payable private NFT_WALLET;
 
     uint256 public constant MIN = 1 * 10 ** 15;
 
@@ -25,7 +21,7 @@ contract JayFeeSplitter is Ownable, ReentrancyGuard {
      * Return: n/a
      */
     function splitFees() external nonReentrant {
-        uint256 eth = address(this).balance.div(3);
+        uint256 eth = address(this).balance / (3);
         if (eth > MIN) {
             sendEth(TEAM_WALLET, eth);
             sendEth(LP_WALLET, eth);

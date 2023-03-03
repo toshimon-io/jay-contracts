@@ -91,22 +91,16 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         // Update rewardPerTokenStored in contract state after rewards are added from FEE_ADDRESS
         rewardPerTokenStored =
             rewardPerTokenStored +
-            (contactBalance.sub(previusRewardTotal)).mul(FACTOR).div(
-                totalAmountStaked
-            );
+            ((contactBalance - previusRewardTotal) * (FACTOR)) /
+            (totalAmountStaked);
 
         // Get the users pending rewards based on their current share balance
-        uint256 pendingRewards = userInfo[msg.sender]
-            .shares
-            .mul(
-                rewardPerTokenStored.sub(
-                    userInfo[msg.sender].rewardPerTokenOnEntry
-                )
-            )
-            .div(FACTOR);
+        uint256 pendingRewards = (userInfo[msg.sender].shares *
+            (rewardPerTokenStored -
+                userInfo[msg.sender].rewardPerTokenOnEntry)) / (FACTOR);
 
         // Save the contract balance so it equals the balaance AFTER the users eth is tranfered in deposit/withdraw
-        previusRewardTotal = contactBalance.sub(pendingRewards);
+        previusRewardTotal = contactBalance - (pendingRewards);
 
         emit Harvest(msg.sender, pendingRewards);
         return pendingRewards;
@@ -170,19 +164,16 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
     function getReward(address _address) public view returns (uint256) {
         if (totalAmountStaked > 0) {
             uint256 _rewardPerTokenStored = rewardPerTokenStored +
-                (address(this).balance.add(address(FEE_ADDRESS).balance).sub(previusRewardTotal)).mul(FACTOR).div(
-                    totalAmountStaked
-                );
+                (address(this).balance +
+                    (address(FEE_ADDRESS).balance) -
+                    (previusRewardTotal)) -
+                (FACTOR) /
+                (totalAmountStaked);
 
             return
-                userInfo[_address]
-                    .shares
-                    .mul(
-                        _rewardPerTokenStored.sub(
-                            userInfo[_address].rewardPerTokenOnEntry
-                        )
-                    )
-                    .div(FACTOR);
+                (userInfo[_address].shares *
+                    (_rewardPerTokenStored -
+                        userInfo[_address].rewardPerTokenOnEntry)) / (FACTOR);
         } else {
             return 0;
         }
@@ -212,9 +203,10 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         if (totalAmountStaked > 0)
             return
                 rewardPerTokenStored +
-                (address(this).balance.add(address(FEE_ADDRESS).balance).sub(previusRewardTotal)).mul(FACTOR).div(
-                    totalAmountStaked
-                );
+                ((address(this).balance +
+                    (address(FEE_ADDRESS).balance) -
+                    (previusRewardTotal)) * (FACTOR)) /
+                (totalAmountStaked);
         else return 0;
     }
 

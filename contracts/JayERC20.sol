@@ -6,9 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
-
-    address payable private FEE_ADDRESS =
-        payable(0x985B6B9064212091B4b325F68746B77262801BcB);
+    address payable private FEE_ADDRESS;
 
     uint256 public constant MIN = 1000;
     uint256 public MAX = 1 * 10 ** 28;
@@ -44,10 +42,10 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         _burn(msg.sender, jay);
 
         // Payment to sender
-        sendEth(msg.sender, eth.mul(SELL_FEE).div(FEE_BASE_1000));
+        sendEth(msg.sender, (eth * SELL_FEE) / FEE_BASE_1000);
 
         // Team fee
-        sendEth(FEE_ADDRESS, eth.div(FEES));
+        sendEth(FEE_ADDRESS, eth / FEES);
 
         emit Price(block.timestamp, jay, eth);
     }
@@ -58,20 +56,20 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Mint Jay to sender
         uint256 jay = ETHtoJAY(msg.value);
-        _mint(reciever, jay.mul(BUY_FEE).div(FEE_BASE_1000));
+        _mint(reciever, (jay * BUY_FEE) / FEE_BASE_1000);
 
         // Team fee
-        sendEth(FEE_ADDRESS, msg.value.div(FEES));
+        sendEth(FEE_ADDRESS, msg.value / FEES);
 
         emit Price(block.timestamp, jay, msg.value);
     }
 
     function JAYtoETH(uint256 value) public view returns (uint256) {
-        return (value * address(this).balance).div(totalSupply());
+        return (value * address(this).balance) / totalSupply();
     }
 
     function ETHtoJAY(uint256 value) public view returns (uint256) {
-        return value.mul(totalSupply()).div(address(this).balance.sub(value));
+        return (value * totalSupply()) / (address(this).balance - value);
     }
 
     function sendEth(address _address, uint256 _value) internal {
@@ -97,19 +95,16 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     //utils
     function getBuyJay(uint256 amount) public view returns (uint256) {
         return
-            amount
-                .mul(totalSupply())
-                .mul(BUY_FEE)
-                .div(address(this).balance)
-                .div(FEE_BASE_1000);
+            (amount * (totalSupply()) * (BUY_FEE)) /
+            (address(this).balance) /
+            (FEE_BASE_1000);
     }
 
     function getSellJay(uint256 amount) public view returns (uint256) {
         return
-            (amount * address(this).balance)
-                .mul(SELL_FEE)
-                .div(totalSupply())
-                .div(FEE_BASE_1000);
+            ((amount * address(this).balance) * (SELL_FEE)) /
+            (totalSupply()) /
+            (FEE_BASE_1000);
     }
 
     function deposit() public payable {}
