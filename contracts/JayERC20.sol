@@ -13,8 +13,6 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     uint256 public constant MIN = 1000;
     uint256 public MAX = 1 * 10 ** 28;
 
-    uint256 private prevPrice;
-
     uint16 public SELL_FEE = 900;
     uint16 public BUY_FEE = 900;
     uint16 public constant FEE_BASE_1000 = 1000;
@@ -28,7 +26,6 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     constructor() payable ERC20("JayPeggers", "JAY") {
         _mint(msg.sender, msg.value * MIN);
         transfer(0x000000000000000000000000000000000000dEaD, 10000);
-        prevPrice = JAYtoETH(ETHinWEI);
     }
 
     //Will be set to 100m eth value after 1 hr
@@ -52,11 +49,6 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         // Team fee
         sendEth(FEE_ADDRESS, eth.div(FEES));
 
-        // Check the price of Jay has increased
-        // If not revert state, tx fails
-        //TO AUDITOR: would ideally like to remove if not necessary
-        //priceCheck();
-
         emit Price(block.timestamp, jay, eth);
     }
 
@@ -70,11 +62,6 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
         // Team fee
         sendEth(FEE_ADDRESS, msg.value.div(FEES));
-
-        // Check the price of Jay has increased
-        // If not revert state, tx fails
-        //TO AUDITOR: would ideally like to remove if not necessary
-        //priceCheck();
 
         emit Price(block.timestamp, jay, msg.value);
     }
@@ -105,17 +92,6 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     function setBuyFee(uint16 amount) external onlyOwner {
         require(amount <= 969 && amount >= 10);
         BUY_FEE = amount;
-    }
-
-    function priceCheck() internal {
-        // Gets there price of Jay after the TX
-        uint256 newPrice = JAYtoETH(ETHinWEI);
-
-        // Assert the new price is > than the previous price
-        assert(prevPrice < newPrice);
-
-        // Set previous price to new price
-        prevPrice = newPrice;
     }
 
     //utils
