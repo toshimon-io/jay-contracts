@@ -166,7 +166,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
             uint256 _rewardPerTokenStored = rewardPerTokenStored +
                 (address(this).balance +
                     (address(FEE_ADDRESS).balance) -
-                    (previusRewardTotal)) -
+                    (previusRewardTotal)) *
                 (FACTOR) /
                 (totalAmountStaked);
 

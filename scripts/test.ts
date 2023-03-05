@@ -46,22 +46,22 @@ async function main() {
 
 
   const ERCFactort = (await ethers.getContractFactory("ERC", owner));
-  ERC = ERCFactort.attach("0xAA1D58a58A20ea9F5b2B2D025eeB24B2f3c66683");
+  ERC = ERCFactort.attach("0x3c3E7E515a72aEC0f469e582480c92A3e12855ec");
   const JAYFactory = (await ethers.getContractFactory("JAY", owner));
-  JAY = JAYFactory.attach("0x89Cb2627037401B93FA1C77238E9D8521A863D51");
+  JAY = JAYFactory.attach("0x82555C123c2b55802A9f9514839B694f291499b8");
   
 
   const JayMartFactory = await ethers.getContractFactory("JayMart", owner);
 
-  JayMart = JayMartFactory.attach("0x55579491F5cf13D467EA6AB42CBA48F86C90Da27");
+  JayMart = JayMartFactory.attach("0xBa6CC9e535240f4CFd25bcEB30c0eb49e1D938C5");
 
   const JayFeeSplitterFactory = await ethers.getContractFactory("JayFeeSplitter", owner);
 
-  JayFeeSplitter = JayFeeSplitterFactory.attach("0xFeF5a9e36FFaD78CaA8C69fFc6610cCF1eC929ea");
+  JayFeeSplitter = JayFeeSplitterFactory.attach("0x958Df3710A9831A54bE89bf270b9d65CB6B7A02E");
 
   const JayLiquidityStakingFactory = await ethers.getContractFactory("JayLiquidityStaking", owner);
 
-  jayLiquidityStaking = JayLiquidityStakingFactory.attach("0x50014Ee371655D5fAb03952C23695F1558A6532a");
+  jayLiquidityStaking = JayLiquidityStakingFactory.attach("0xAC9bc025730411C2F6cF8c4De582eEc6dB6CD549");
 
   let tot = 0;
   let addresses = [];
