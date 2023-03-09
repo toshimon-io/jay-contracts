@@ -11,5 +11,3 @@ import type * as erc1155Sol from "./erc1155.sol";
 export type { erc1155Sol };
 import type * as nftSol from "./nft.sol";
 export type { nftSol };
-import type * as nftBadSol from "./nftBad.sol";
-export type { nftBadSol };

@@ -256,7 +256,7 @@ describe("JAY contract", function () {
     
       await (await nft.connect(addr1).safeMint(addr1.address, 1)).wait();
       await (await nft.connect(addr1).safeMint(addr1.address, 2)).wait();
-    
+      await (await JAY.connect(addr1).buy(addr1.address, {value: '100000000000000000000'})).wait();
       await (await JAY.connect(addr1).approve(JayMart.address, ethers.utils.parseEther("1000000000000000000"))).wait();
     
       // Sell ERC721 token to JayMart contract
@@ -269,7 +269,6 @@ describe("JAY contract", function () {
       const initialBalance = await provider.getBalance(addr1.address);
       const totalCost = ethers.utils.parseEther("0.32");
       const cost = ethers.utils.parseEther("0.31");
-    
       const tx = JayMart.connect(addr1).buyNFTs(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: cost });
       
       await expect(tx).to.be.reverted;

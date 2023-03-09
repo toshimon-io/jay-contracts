@@ -34,7 +34,7 @@ const config: HardhatUserConfig = {
         version: "0.6.6"
       },
       {
-        version: "0.8.17"
+        version: "0.8.16"
       }
     ]
   },
@@ -58,6 +58,19 @@ const config: HardhatUserConfig = {
         [process.env.PRIVATE_KEY2 || ""]
       ,
     },
+    septest2: {
+      url: "https://goerli.infura.io/v3/" + process.env.INFURA_API,
+      accounts:
+        [process.env.PRIVATE_KEY3 || ""]
+      ,
+    },
+    septest3: {
+      url: "https://goerli.infura.io/v3/" + process.env.INFURA_API,
+      accounts:
+        [process.env.PRIVATE_KEY4 || ""]
+      ,
+    },
+    
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

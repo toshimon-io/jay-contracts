@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.16;
 
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -86,12 +86,12 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         FEE_ADDRESS.splitFees();
 
         // Get the balance of the contract
-        uint256 contactBalance = address(this).balance;
+        uint256 contractBalance = address(this).balance;
 
         // Update rewardPerTokenStored in contract state after rewards are added from FEE_ADDRESS
         rewardPerTokenStored =
             rewardPerTokenStored +
-            ((contactBalance - previusRewardTotal) * (FACTOR)) /
+            ((contractBalance - previusRewardTotal) * (FACTOR)) /
             (totalAmountStaked);
 
         // Get the users pending rewards based on their current share balance
@@ -100,7 +100,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
                 userInfo[msg.sender].rewardPerTokenOnEntry)) / (FACTOR);
 
         // Save the contract balance so it equals the balaance AFTER the users eth is tranfered in deposit/withdraw
-        previusRewardTotal = contactBalance - (pendingRewards);
+        previusRewardTotal = contractBalance - (pendingRewards);
 
         emit Harvest(msg.sender, pendingRewards);
         return pendingRewards;

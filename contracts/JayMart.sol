@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 
@@ -218,7 +218,7 @@ contract JayMart is Ownable, ReentrancyGuard {
     ) internal returns (uint256) {
         uint256 amount = 0;
         for (uint256 id = 0; id < ids.length; id++) {
-            amount = amount * (amounts[id]);
+            amount = amount + (amounts[id]);
             IERC1155(_tokenAddress[id]).safeTransferFrom(
                 address(this),
                 msg.sender,
@@ -313,10 +313,14 @@ contract JayMart is Ownable, ReentrancyGuard {
         returns (uint256, uint256, uint256, uint256)
     {
         // Get latest price feed
-        (, int256 price, , uint256 timeStamp, ) = priceFeed.latestRoundData();
+        (uint80 roundID, int256 price, , uint256 timestamp, uint80 answeredInRound) = priceFeed.latestRoundData();
+
+        require(price > 0, "Chainlink price <= 0");
+        require(answeredInRound >= roundID, "Stale price");
+        require(timestamp != 0, "Round not complete");
 
         uint256 _price = uint256(price) * (1 * 10 ** 10);
-        require(timeStamp > nextFeeUpdate, "Fee update every 24 hrs");
+        require(timestamp > nextFeeUpdate, "Fee update every 24 hrs");
 
         uint256 _sellNftFeeEth;
         if (_price > USD_PRICE_SELL) {
@@ -343,7 +347,7 @@ contract JayMart is Ownable, ReentrancyGuard {
         }
         buyNftFeeJay = JAY.ETHtoJAY(buyNftFeeEth);
 
-        nextFeeUpdate = timeStamp + (24 hours);
+        nextFeeUpdate = timestamp + (24 hours);
         return (sellNftFeeEth, buyNftFeeEth, buyNftFeeJay, nextFeeUpdate);
     }
 

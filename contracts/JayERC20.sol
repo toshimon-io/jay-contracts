@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -93,14 +93,14 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     }
 
     //utils
-    function getBuyJay(uint256 amount) public view returns (uint256) {
+    function getBuyJay(uint256 amount) external view returns (uint256) {
         return
             (amount * (totalSupply()) * (BUY_FEE)) /
             (address(this).balance) /
             (FEE_BASE_1000);
     }
 
-    function getSellJay(uint256 amount) public view returns (uint256) {
+    function getSellJay(uint256 amount) external view returns (uint256) {
         return
             ((amount * address(this).balance) * (SELL_FEE)) /
             (totalSupply()) /
