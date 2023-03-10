@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract JAYBal is ERC20Burnable, Ownable, ReentrancyGuard {
+contract JAYusingContractBal is ERC20Burnable, Ownable, ReentrancyGuard {
     address payable private FEE_ADDRESS;
 
     uint256 public constant MIN = 1000;
