@@ -42,6 +42,8 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
+export type { JAYBal } from "./contracts/JayERC20 copy.sol/JAYBal";
+export { JAYBal__factory } from "./factories/contracts/JayERC20 copy.sol/JAYBal__factory";
 export type { JAY } from "./contracts/JayERC20.sol/JAY";
 export { JAY__factory } from "./factories/contracts/JayERC20.sol/JAY__factory";
 export type { JayFeeSplitter } from "./contracts/JayFeeSplitter";

@@ -71,7 +71,7 @@ async function main() {
    
     try{
         if(rng(0,5) == 0){ 
-        const val = rng(10,30).toString() + "00000000000000"
+        const val = rng(10,30).toString() + "0000000000000000"
         await( await JAY.connect(owner).buy(owner.address, { value: val })).wait(); 
         tot += 0.1
         }

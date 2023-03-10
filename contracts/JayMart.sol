@@ -356,12 +356,7 @@ contract JayMart is Ownable, ReentrancyGuard {
         return price;
     }
 
-    //receiver helpers
-    function deposit() public payable {}
-
     receive() external payable {}
-
-    fallback() external payable {}
 
     function onERC1155Received(
         address,

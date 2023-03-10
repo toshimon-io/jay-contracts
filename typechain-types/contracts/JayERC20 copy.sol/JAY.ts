@@ -47,10 +47,9 @@ export interface JAYInterface extends utils.Interface {
     "buy(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "emergencyFixTotalEth(uint16)": FunctionFragment;
+    "deposit()": FunctionFragment;
     "getBuyJay(uint256)": FunctionFragment;
     "getSellJay(uint256)": FunctionFragment;
-    "getTotalEth()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -61,7 +60,6 @@ export interface JAYInterface extends utils.Interface {
     "setMax(uint256)": FunctionFragment;
     "setSellFee(uint16)": FunctionFragment;
     "symbol()": FunctionFragment;
-    "totalEth()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
@@ -87,10 +85,9 @@ export interface JAYInterface extends utils.Interface {
       | "buy"
       | "decimals"
       | "decreaseAllowance"
-      | "emergencyFixTotalEth"
+      | "deposit"
       | "getBuyJay"
       | "getSellJay"
-      | "getTotalEth"
       | "increaseAllowance"
       | "name"
       | "owner"
@@ -101,7 +98,6 @@ export interface JAYInterface extends utils.Interface {
       | "setMax"
       | "setSellFee"
       | "symbol"
-      | "totalEth"
       | "totalSupply"
       | "transfer"
       | "transferFrom"
@@ -155,10 +151,7 @@ export interface JAYInterface extends utils.Interface {
     functionFragment: "decreaseAllowance",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "emergencyFixTotalEth",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getBuyJay",
     values: [PromiseOrValue<BigNumberish>]
@@ -166,10 +159,6 @@ export interface JAYInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getSellJay",
     values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getTotalEth",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
@@ -202,7 +191,6 @@ export interface JAYInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(functionFragment: "totalEth", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -247,16 +235,9 @@ export interface JAYInterface extends utils.Interface {
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "emergencyFixTotalEth",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getBuyJay", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getSellJay", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getTotalEth",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -276,7 +257,6 @@ export interface JAYInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "setMax", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setSellFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "totalEth", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -477,9 +457,8 @@ export interface JAY extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    deposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     getBuyJay(
@@ -491,8 +470,6 @@ export interface JAY extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    getTotalEth(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -534,8 +511,6 @@ export interface JAY extends BaseContract {
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
-
-    totalEth(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -623,9 +598,8 @@ export interface JAY extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  emergencyFixTotalEth(
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  deposit(
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   getBuyJay(
@@ -637,8 +611,6 @@ export interface JAY extends BaseContract {
     amount: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
-
-  getTotalEth(overrides?: CallOverrides): Promise<BigNumber>;
 
   increaseAllowance(
     spender: PromiseOrValue<string>,
@@ -680,8 +652,6 @@ export interface JAY extends BaseContract {
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
-
-  totalEth(overrides?: CallOverrides): Promise<BigNumber>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -769,10 +739,7 @@ export interface JAY extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    deposit(overrides?: CallOverrides): Promise<void>;
 
     getBuyJay(
       amount: PromiseOrValue<BigNumberish>,
@@ -783,8 +750,6 @@ export interface JAY extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    getTotalEth(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -824,8 +789,6 @@ export interface JAY extends BaseContract {
     ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
-
-    totalEth(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -963,9 +926,8 @@ export interface JAY extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    deposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     getBuyJay(
@@ -977,8 +939,6 @@ export interface JAY extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    getTotalEth(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -1020,8 +980,6 @@ export interface JAY extends BaseContract {
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalEth(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1110,9 +1068,8 @@ export interface JAY extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    deposit(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     getBuyJay(
@@ -1124,8 +1081,6 @@ export interface JAY extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    getTotalEth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: PromiseOrValue<string>,
@@ -1167,8 +1122,6 @@ export interface JAY extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalEth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

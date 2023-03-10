@@ -30,14 +30,17 @@ contract JayFeeSplitter is Ownable, ReentrancyGuard {
     }
 
     function setTEAMWallet(address _address) external onlyOwner {
+        require(_address != address(0x0));
         TEAM_WALLET = payable(_address);
     }
 
     function setNFTWallet(address _address) external onlyOwner {
+        require(_address != address(0x0));
         NFT_WALLET = payable(_address);
     }
 
     function setLPWallet(address _address) external onlyOwner {
+        require(_address != address(0x0));
         LP_WALLET = payable(_address);
     }
 
@@ -54,10 +57,5 @@ contract JayFeeSplitter is Ownable, ReentrancyGuard {
         require(success, "ETH Transfer failed.");
     }
 
-    //receiver helpers
-    function deposit() public payable {}
-
     receive() external payable {}
-
-    fallback() external payable {}
 }

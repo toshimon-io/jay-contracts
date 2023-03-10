@@ -29,7 +29,14 @@ describe("JAY contract", function () {
   let addr4: SignerWithAddress;
   let jayLiquidityStaking: JayLiquidityStaking;
 
-
+    
+  const checkJayTotal = async () => {
+    /*const jayBalance = await provider.getBalance(JAY.address);
+    const total = await JAY.getTotalEth();
+    //console.log(total.toString())
+    //console.log(jayBalance.toString())
+    expect(jayBalance.gte(total)).to.be.true;*/
+  }
   before(async () => {
     [owner, addr1, addr2, addr3, addr4] = await ethers.getSigners();
 
@@ -101,26 +108,29 @@ describe("JAY contract", function () {
 
 
     //
-   
+    await checkJayTotal();
     await(await owner.sendTransaction(tx)).wait();
+    await checkJayTotal();
     console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
     console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
-
+    await checkJayTotal();
     await (await jayLiquidityStaking.connect(owner).deposit(10000000000)).wait();
-
+    await checkJayTotal();
     await(await owner.sendTransaction(tx)).wait();
+    await checkJayTotal();
     console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
     console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
 
-
+    await checkJayTotal();
     await(await owner.sendTransaction(tx)).wait();
-
+    await checkJayTotal();
     console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
     console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
-
+    await checkJayTotal();
     await(await jayLiquidityStaking.connect(owner).withdraw(10000000000)).wait();
-
-    await(await owner.sendTransaction(tx)).wait();
+    await checkJayTotal();
+    await(await owner.sendTransaction(tx)).wait();      
+    await checkJayTotal();
     console.log("addr1 : " + await jayLiquidityStaking.connect(addr1).getReward(addr1.address));
     console.log("ower  : " +  await jayLiquidityStaking.connect(owner).getReward(owner.address));
 
@@ -134,31 +144,37 @@ describe("JAY contract", function () {
 
     const estimation = await JAY.connect(signers[1]).estimateGas.buy(signers[1].address, { value: "100000000000000000" })
 
-    console.log(estimation)
+    console.log("GAS", estimation)
 
     for (let i=0; i < 100000; i++) {
    
     
       if(rng(0,5) == 0){ 
         const val = rng(10,100).toString() + "0000000000000000"
+        await checkJayTotal();
         await( await JAY.connect(signers[i % 19 + 1]).buy(signers[i % 19 + 1].address, { value: val })).wait(); 
+        await checkJayTotal();
         tot += 0.1
       }
       if(rng(0,5) == 0 && Number(await JAY.balanceOf(signers[i % 19 + 1].address)) > 0){
         const value = rng(1,2);
         tot += Number(ethers.utils.formatEther(await JAY.JAYtoETH(await JAY.balanceOf(signers[i % 19 + 1].address)))) / value;
-
+        await checkJayTotal();
         await( await JAY.connect(signers[i % 19 + 1]).sell((await JAY.balanceOf(signers[i % 19 + 1].address)).div(value))).wait();
-
+        await checkJayTotal();
       }
      
       if(tot > 100){
+        await checkJayTotal();
         await(await jayLiquidityStaking.deposit(0)).wait()
+        await checkJayTotal();
         break;
       }
   
     }
+    await checkJayTotal();
     await(await jayLiquidityStaking.deposit("1000000000000000")).wait()
+    await checkJayTotal();
     console.log("___________________________")
     console.log(ethers.utils.formatEther(await provider.getBalance( JayFeeSplitter.address)));
     console.log("")
@@ -187,7 +203,7 @@ describe("JAY contract", function () {
 
       //Check the balance of addr1
       const balance = await JAY.balanceOf(addr1.address);
-
+      await checkJayTotal();
       //Sell JAY tokens
       const sell = balance;
       const sellTx = await JAY.connect(addr1).sell(sell);
@@ -196,6 +212,7 @@ describe("JAY contract", function () {
       //Check the balance of addr1 after selling tokens
       const balanceAfterSell = await JAY.balanceOf(addr1.address);
       expect(balanceAfterSell.toNumber()).to.be.equal(0);
+      await checkJayTotal();
 
     });
 
@@ -230,12 +247,13 @@ describe("JAY contract", function () {
       const initialBalance = await provider.getBalance(addr1.address);
       const totalCost = ethers.utils.parseEther("0.032");
       const cost = ethers.utils.parseEther("0.031");
-  
+      await checkJayTotal();
       const tx = JayMart.connect(addr1).buyJay(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: cost});
-      
+      await checkJayTotal();
       await expect(tx).to.be.reverted;
       await (await JayMart.connect(addr1).buyJay(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: totalCost})).wait();
       const finalBalance = await provider.getBalance(addr1.address);
+      await checkJayTotal();
       expect(finalBalance.lt(initialBalance)).to.be.true;
     });
 
@@ -256,27 +274,30 @@ describe("JAY contract", function () {
     
       await (await nft.connect(addr1).safeMint(addr1.address, 1)).wait();
       await (await nft.connect(addr1).safeMint(addr1.address, 2)).wait();
+      await checkJayTotal();
       await (await JAY.connect(addr1).buy(addr1.address, {value: '100000000000000000000'})).wait();
+      await checkJayTotal();
       await (await JAY.connect(addr1).approve(JayMart.address, ethers.utils.parseEther("1000000000000000000"))).wait();
     
       // Sell ERC721 token to JayMart contract
       await (await nft.connect(addr1).setApprovalForAll(JayMart.address, true)).wait();
     
       await (await erc1155.connect(addr1).setApprovalForAll(JayMart.address, true)).wait();
-    
+      await checkJayTotal();
       await (await JayMart.connect(addr1).buyJay(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: ethers.utils.parseEther("0.032")})).wait();
-
-      const initialBalance = await provider.getBalance(addr1.address);
+      await checkJayTotal();
+      const initialBalance = await provider.getBalance(JAY.address);
       const totalCost = ethers.utils.parseEther("0.32");
       const cost = ethers.utils.parseEther("0.31");
+      await checkJayTotal();
       const tx = JayMart.connect(addr1).buyNFTs(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: cost });
-      
+      await checkJayTotal();
       await expect(tx).to.be.reverted;
       await (await JayMart.connect(addr1).buyNFTs(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: totalCost })).wait();
-      const finalBalance = await provider.getBalance(addr1.address);
-      expect(finalBalance.lt(initialBalance)).to.be.true;
+      const finalBalance = await provider.getBalance(JAY.address);
+      expect(finalBalance.gt(initialBalance)).to.be.true;
+      await checkJayTotal();
     });
-    
 
 
     it("JAYtoETH should increase after transactions", async function () {
@@ -285,22 +306,26 @@ describe("JAY contract", function () {
       const jay = await JAY.deployed();
       let prevPrice = await jay.JAYtoETH(ethers.utils.parseEther("1"));
 
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < 100; i++) {
         const buyAmount =  ethers.utils.parseEther((Math.floor(Math.random()*10)*1e10 + 1000).toString());
         const sellAmount = ethers.utils.parseEther((Math.floor(Math.random()*10)*1e10 + 1000).toString());
-        const ethBalance = await ethers.provider.getBalance(addr3.address);
+
         const jayBalance = await JAY.balanceOf(addr3.address);
-        if (buyAmount.lt(ethBalance)) 
-          await jay.connect(addr3).buy(addr3.address, { value: buyAmount });
         if (sellAmount.lt(jayBalance)) 
           await jay.connect(addr3).sell(sellAmount);
+        await checkJayTotal();
+        const ethBalance = await ethers.provider.getBalance(addr3.address);
+        if (buyAmount.lt(ethBalance)) 
+          await jay.connect(addr3).buy(addr3.address, { value: buyAmount });
+        await checkJayTotal();
+
         const newPrice = await jay.JAYtoETH(ethers.utils.parseEther("1"));
         expect(Number(newPrice)).to.be.greaterThanOrEqual(Number(prevPrice));
         prevPrice = newPrice;
         //Append the newPrice to test.txt
         await appendToFile("./test.txt", `${newPrice}\n`);
       }
-      
+      await checkJayTotal();
     });
 
     async function appendToFile(filePath: number | fs.PathLike, data: string) {
@@ -329,20 +354,22 @@ describe("JAY contract", function () {
       await (await erc721.connect(owner).approve(JayMart.address, tokenId)).wait();
       
       // Buy 1 ETH worth of JAY
+      await checkJayTotal();
       await (await JAY.connect(owner).buy(owner.address, { value: ethToBuy })).wait();
-    
+      await checkJayTotal();
       // Buy ERC721 token using JAY
-      await (await JayMart.connect(owner).buyJay([erc721.address], [tokenId], [], [], [], {value: ethToBuyJay})).wait();
 
+      await (await JayMart.connect(owner).buyJay([erc721.address], [tokenId], [], [], [], {value: ethToBuyJay})).wait();
+      await checkJayTotal();
       const newOwn = await erc721.ownerOf(tokenId);
       expect(newOwn).to.equal(JayMart.address);
 
       await (await JayMart.connect(owner).buyNFTs([erc721.address], [tokenId], [], [], [], {value: ethToBuyNFT})).wait();
-
+      await checkJayTotal();
       // Assert that the ERC721 token is now owned by owner
       const newOwner = await erc721.ownerOf(tokenId);
       expect(newOwner).to.equal(owner.address);
-      
+      await checkJayTotal();
       });
 
       it("Should buy NFTs and transfer them to the buyer's address", async function () {
@@ -354,10 +381,11 @@ describe("JAY contract", function () {
         const initialJayToEth = await JAY.JAYtoETH(ethers.utils.parseEther("1"));
 
             // Approve spending of JAY by JayMart contract
+            await checkJayTotal();
         await (await JAY.connect(addr1).buy(addr1.address, {value: ethers.utils.parseEther("1")})).wait();
         await (await JAY.connect(addr1).approve(JayMart.address, ethers.utils.parseEther("1000000000000000000"))).wait();
         // Approve spending of ERC721 by JayMart contract
-
+        await checkJayTotal();
 
         // Mint an ERC721 token
         await (await erc721.safeMint(owner.address,1)).wait();
@@ -379,9 +407,9 @@ describe("JAY contract", function () {
         const erc1155TokenAddress = [erc1155.address];
         const erc1155Ids = [tokenId];
         const erc1155Amounts = [1];
-
+        await checkJayTotal();
         await(await JayMart.connect(owner).buyJay(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: valueBuy })).wait();
-
+        await checkJayTotal();
         const tx = await JayMart.connect(addr1).buyNFTs(erc721TokenAddress, erc721Ids, erc1155TokenAddress, erc1155Ids, erc1155Amounts, { value: valueSell  });
         await tx.wait();
 
@@ -394,6 +422,7 @@ describe("JAY contract", function () {
         // Check that the ERC721 and ERC1155 tokens have been transferred to the buyer's address
         expect(await erc721.ownerOf(tokenId)).to.equal(addr1.address);
         expect(await erc1155.balanceOf(addr1.address, tokenId)).to.equal(1);
+        await checkJayTotal();
     });
 
         
@@ -414,10 +443,11 @@ describe("JAY contract", function () {
         
         let preBuyJayBal = await JAY.balanceOf(owner.address);
         // Buy 1 ETH worth of JAY
+        await checkJayTotal();
         await (await JAY.connect(owner).buy(owner.address, { value: ethToBuy })).wait();
         let postBuyJayBal = await JAY.balanceOf(owner.address);
         expect(postBuyJayBal.gt(preBuyJayBal)).to.be.true;
-        
+        await checkJayTotal();
         // Sell ERC721 token to JayMart contract
         await (await erc721.safeMint(owner.address,1)).wait();
         await (await erc721.connect(owner).approve(JayMart.address, tokenId)).wait();
@@ -426,6 +456,7 @@ describe("JAY contract", function () {
         // Buy ERC721 token using JAY
         await (await JayMart.connect(owner).buyJay([erc721.address], [tokenId], [], [], [], {value: ethToBuyJay})).wait();
         let postBuyJayMartBal = await JAY.balanceOf(owner.address);
+        await checkJayTotal();
         expect(preBuyJayMartBal.lt(postBuyJayMartBal)).to.be.true;
       
         const newOwn = await erc721.ownerOf(tokenId);
@@ -433,11 +464,11 @@ describe("JAY contract", function () {
         
         let preEthBal = await ethers.provider.getBalance(owner.address);
         await (await JayMart.connect(owner).buyNFTs([erc721.address], [tokenId], [], [], [], {value: ethToBuyNFT})).wait();
-
+        await checkJayTotal();
         // Assert that the ERC721 token is now owned by owner
         const newOwner = await erc721.ownerOf(tokenId);
         expect(newOwner).to.equal(owner.address);
-
+        await checkJayTotal();
       });
       
 

@@ -41,6 +41,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
     }
 
     function setFeeAddress(address _address) external onlyOwner {
+        require(_address != address(0x0));
         FEE_ADDRESS = JayFeeSplitter(payable(_address));
     }
 

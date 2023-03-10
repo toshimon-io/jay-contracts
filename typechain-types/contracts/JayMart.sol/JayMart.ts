@@ -32,7 +32,6 @@ export interface JayMartInterface extends utils.Interface {
   functions: {
     "buyJay(address[],uint256[],address[],uint256[],uint256[])": FunctionFragment;
     "buyNFTs(address[],uint256[],address[],uint256[],uint256[])": FunctionFragment;
-    "deposit()": FunctionFragment;
     "getFees()": FunctionFragment;
     "getLatestPrice()": FunctionFragment;
     "getPriceBuy(uint256)": FunctionFragment;
@@ -51,7 +50,6 @@ export interface JayMartInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "buyJay"
       | "buyNFTs"
-      | "deposit"
       | "getFees"
       | "getLatestPrice"
       | "getPriceBuy"
@@ -86,7 +84,6 @@ export interface JayMartInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>[]
     ]
   ): string;
-  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(functionFragment: "getFees", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getLatestPrice",
@@ -140,7 +137,6 @@ export interface JayMartInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "buyJay", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "buyNFTs", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getFees", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getLatestPrice",
@@ -242,10 +238,6 @@ export interface JayMart extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    deposit(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     getFees(
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber]>;
@@ -317,10 +309,6 @@ export interface JayMart extends BaseContract {
     erc1155TokenAddress: PromiseOrValue<string>[],
     erc1155Ids: PromiseOrValue<BigNumberish>[],
     erc1155Amounts: PromiseOrValue<BigNumberish>[],
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  deposit(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -397,8 +385,6 @@ export interface JayMart extends BaseContract {
       erc1155Amounts: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
-
-    deposit(overrides?: CallOverrides): Promise<void>;
 
     getFees(
       overrides?: CallOverrides
@@ -484,10 +470,6 @@ export interface JayMart extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    deposit(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     getFees(overrides?: CallOverrides): Promise<BigNumber>;
 
     getLatestPrice(overrides?: CallOverrides): Promise<BigNumber>;
@@ -558,10 +540,6 @@ export interface JayMart extends BaseContract {
       erc1155TokenAddress: PromiseOrValue<string>[],
       erc1155Ids: PromiseOrValue<BigNumberish>[],
       erc1155Amounts: PromiseOrValue<BigNumberish>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    deposit(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -8,7 +8,6 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -30,7 +29,6 @@ import type {
 export interface JayFeeSplitterInterface extends utils.Interface {
   functions: {
     "MIN()": FunctionFragment;
-    "deposit()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setLPWallet(address)": FunctionFragment;
@@ -43,7 +41,6 @@ export interface JayFeeSplitterInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "MIN"
-      | "deposit"
       | "owner"
       | "renounceOwnership"
       | "setLPWallet"
@@ -54,7 +51,6 @@ export interface JayFeeSplitterInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "MIN", values?: undefined): string;
-  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -79,7 +75,6 @@ export interface JayFeeSplitterInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "MIN", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -151,10 +146,6 @@ export interface JayFeeSplitter extends BaseContract {
   functions: {
     MIN(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    deposit(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
@@ -188,10 +179,6 @@ export interface JayFeeSplitter extends BaseContract {
 
   MIN(overrides?: CallOverrides): Promise<BigNumber>;
 
-  deposit(
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   owner(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
@@ -224,8 +211,6 @@ export interface JayFeeSplitter extends BaseContract {
 
   callStatic: {
     MIN(overrides?: CallOverrides): Promise<BigNumber>;
-
-    deposit(overrides?: CallOverrides): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -268,10 +253,6 @@ export interface JayFeeSplitter extends BaseContract {
   estimateGas: {
     MIN(overrides?: CallOverrides): Promise<BigNumber>;
 
-    deposit(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
@@ -305,10 +286,6 @@ export interface JayFeeSplitter extends BaseContract {
 
   populateTransaction: {
     MIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    deposit(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
