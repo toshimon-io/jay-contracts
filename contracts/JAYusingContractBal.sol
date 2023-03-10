@@ -91,7 +91,6 @@ contract JAYusingContractBal is ERC20Burnable, Ownable, ReentrancyGuard {
         require(amount > SELL_FEE);
         SELL_FEE = amount;
         emit SellFeeUpdated(amount);
-
     }
 
     function setBuyFee(uint16 amount) external onlyOwner {

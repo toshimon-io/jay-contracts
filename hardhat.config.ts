@@ -9,8 +9,6 @@ import "solidity-coverage";
 
 dotenv.config();
 
-
-
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -25,52 +23,42 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // Go to https://hardhat.org/config/ to learn more
 
 const config: HardhatUserConfig = {
-  solidity:{
+  solidity: {
     compilers: [
       {
-        version: "0.5.16"
+        version: "0.8.16",
       },
       {
-        version: "0.6.6"
+        version: "0.5.16",
       },
       {
-        version: "0.8.16"
+        version: "0.6.6",
       }
-    ]
+    ],
   },
   networks: {
-  
     hardhat: {
       forking: {
         url: "https://eth-mainnet.alchemyapi.io/v2/" + process.env.ALCHEMY_API,
-      }
+      },
     },
 
     sep: {
-      url: "https://goerli.infura.io/v3/"+ process.env.INFURA_API,
-      accounts:
-        [process.env.PRIVATE_KEY1 || ""]
-      ,
+      url: "https://goerli.infura.io/v3/" + process.env.INFURA_API,
+      accounts: [process.env.PRIVATE_KEY1 || ""],
     },
     septest: {
       url: "https://goerli.infura.io/v3/" + process.env.INFURA_API,
-      accounts:
-        [process.env.PRIVATE_KEY2 || ""]
-      ,
+      accounts: [process.env.PRIVATE_KEY2 || ""],
     },
     septest2: {
       url: "https://goerli.infura.io/v3/" + process.env.INFURA_API,
-      accounts:
-        [process.env.PRIVATE_KEY3 || ""]
-      ,
+      accounts: [process.env.PRIVATE_KEY3 || ""],
     },
     septest3: {
       url: "https://goerli.infura.io/v3/" + process.env.INFURA_API,
-      accounts:
-        [process.env.PRIVATE_KEY4 || ""]
-      ,
+      accounts: [process.env.PRIVATE_KEY4 || ""],
     },
-    
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

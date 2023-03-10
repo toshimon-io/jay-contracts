@@ -101,7 +101,6 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         require(amount > SELL_FEE);
         SELL_FEE = amount;
         emit SellFeeUpdated(amount);
-
     }
 
     function setBuyFee(uint16 amount) external onlyOwner {
@@ -125,9 +124,10 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
             (FEE_BASE_1000);
     }
 
-    function emergencyFixTotalEth(uint16 amount) external nonReentrant {
+    function emergencyFixTotalEth() external nonReentrant {
         totalEth = address(this).balance;
     }
+
     function getTotalEth() external view returns (uint256) {
         return totalEth;
     }

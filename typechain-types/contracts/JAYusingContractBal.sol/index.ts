@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { JAYBal } from "./JAYBal";
+export type { JAYusingContractBal } from "./JAYusingContractBal";

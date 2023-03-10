@@ -313,7 +313,13 @@ contract JayMart is Ownable, ReentrancyGuard {
         returns (uint256, uint256, uint256, uint256)
     {
         // Get latest price feed
-        (uint80 roundID, int256 price, , uint256 timestamp, uint80 answeredInRound) = priceFeed.latestRoundData();
+        (
+            uint80 roundID,
+            int256 price,
+            ,
+            uint256 timestamp,
+            uint80 answeredInRound
+        ) = priceFeed.latestRoundData();
 
         require(price > 0, "Chainlink price <= 0");
         require(answeredInRound >= roundID, "Stale price");

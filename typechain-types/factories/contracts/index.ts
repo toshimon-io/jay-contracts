@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as jaYusingContractBalSol from "./JAYusingContractBal.sol";
-export * as jayErc20CopySol from "./JayERC20 copy.sol";
 export * as jayErc20Sol from "./JayERC20.sol";
 export * as jayMartSol from "./JayMart.sol";
 export * as test from "./test";
