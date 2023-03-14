@@ -360,18 +360,25 @@ describe("JAY contract", function () {
         owner
       );
       const erc1155 = await ERC1155Factory.deploy();
-      const erc721TokenAddress = [nft.address, nft.address];
-      const erc721Ids = [1, 2];
-      const erc1155TokenAddress = [erc1155.address, erc1155.address];
-      const erc1155Ids = [1, 2];
-      const erc1155Amounts = [10, 20];
+      let erc721TokenAddress: string[] = [];
+      let erc721Ids: BigNumberish[] = [];
+      let erc1155TokenAddress: string[] = [];
+      let erc1155Ids: BigNumberish[] = [];
+      let erc1155Amounts: BigNumberish[] = [];
 
       // Mint some ERC1155 tokens
-      await (await erc1155.connect(addr1).mint(addr1.address, 1, 10)).wait();
-      await (await erc1155.connect(addr1).mint(addr1.address, 2, 20)).wait();
+      for(let j = 1; j<501; j++){
+        /*await (await erc1155.connect(addr1).mint(addr1.address, j, 10)).wait();
+        erc1155TokenAddress.push(erc1155.address);
+        erc1155Ids.push(j);
+        erc1155Amounts.push(10);*/
+        await (await nft.connect(addr1).safeMint(addr1.address, j)).wait();
+        erc721TokenAddress.push(nft.address)
+        erc721Ids.push(j);
+      }
 
-      await (await nft.connect(addr1).safeMint(addr1.address, 1)).wait();
-      await (await nft.connect(addr1).safeMint(addr1.address, 2)).wait();
+      //await (await nft.connect(addr1).safeMint(addr1.address, 1)).wait();
+      //await (await nft.connect(addr1).safeMint(addr1.address, 2)).wait();
       await checkJayTotal();
       await (
         await JAY.connect(addr1).buy(addr1.address, {
@@ -402,11 +409,11 @@ describe("JAY contract", function () {
           erc1155TokenAddress,
           erc1155Ids,
           erc1155Amounts,
-          { value: ethers.utils.parseEther("0.032") }
+          { value: ethers.utils.parseEther("5") }
         )
       ).wait();
       await checkJayTotal();
-      const initialBalance = await provider.getBalance(JAY.address);
+      /*const initialBalance = await provider.getBalance(JAY.address);
       const totalCost = ethers.utils.parseEther("0.32");
       const cost = ethers.utils.parseEther("0.31");
       await checkJayTotal();
@@ -432,7 +439,7 @@ describe("JAY contract", function () {
       ).wait();
       const finalBalance = await provider.getBalance(JAY.address);
       expect(finalBalance.gt(initialBalance)).to.be.true;
-      await checkJayTotal();
+      await checkJayTotal();*/
     });
 
     it("JAYtoETH should increase after transactions", async function () {

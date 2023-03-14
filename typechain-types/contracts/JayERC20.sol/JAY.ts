@@ -47,7 +47,7 @@ export interface JAYInterface extends utils.Interface {
     "buy(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "emergencyFixTotalEth(uint16)": FunctionFragment;
+    "emergencyFixTotalEth()": FunctionFragment;
     "getBuyJay(uint256)": FunctionFragment;
     "getSellJay(uint256)": FunctionFragment;
     "getTotalEth()": FunctionFragment;
@@ -157,7 +157,7 @@ export interface JAYInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "emergencyFixTotalEth",
-    values: [PromiseOrValue<BigNumberish>]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getBuyJay",
@@ -478,7 +478,6 @@ export interface JAY extends BaseContract {
     ): Promise<ContractTransaction>;
 
     emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -624,7 +623,6 @@ export interface JAY extends BaseContract {
   ): Promise<ContractTransaction>;
 
   emergencyFixTotalEth(
-    amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -769,10 +767,7 @@ export interface JAY extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    emergencyFixTotalEth(overrides?: CallOverrides): Promise<void>;
 
     getBuyJay(
       amount: PromiseOrValue<BigNumberish>,
@@ -964,7 +959,6 @@ export interface JAY extends BaseContract {
     ): Promise<BigNumber>;
 
     emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1111,7 +1105,6 @@ export interface JAY extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     emergencyFixTotalEth(
-      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

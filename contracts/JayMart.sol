@@ -102,6 +102,10 @@ contract JayMart is Ownable, ReentrancyGuard {
         uint256[] calldata erc1155Amounts
     ) external payable nonReentrant {
         // Calculate total
+        require(
+            erc721TokenAddress.length + erc1155TokenAddress.length <= 500,
+            "Max is 500"
+        );
         uint256 total = erc721TokenAddress.length;
 
         // Transfer ERC721 NFTs
@@ -145,6 +149,10 @@ contract JayMart is Ownable, ReentrancyGuard {
         uint256[] calldata erc1155Ids,
         uint256[] calldata erc1155Amounts
     ) external payable nonReentrant {
+        require(
+            erc721TokenAddress.length + erc1155TokenAddress.length <= 500,
+            "Max is 500"
+        );
         uint256 teamFee = msg.value / (SELL_NFT_FEE_TEAM);
         uint256 jayFee = msg.value / (SELL_NFT_FEE_VAULT);
         uint256 userValue = msg.value / (SELL_NFT_PAYOUT);
