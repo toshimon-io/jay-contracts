@@ -182,7 +182,7 @@ contract JayDerivLiquidityStaking is ReentrancyGuard, Ownable {
         if (totalAmountStaked > 0) {
             uint256 _rewardPerTokenStored = rewardPerTokenStored +
                 ((rewardToken.balanceOf(address(this)) +
-                    (rewardToken.balanceOf(address(FEE_ADDRESS)) * 2 / 3) -
+                    (rewardToken.balanceOf(address(FEE_ADDRESS)) * 2 / 4) -
                     (previusRewardTotal)) * (FACTOR)) /
                 (totalAmountStaked);
 
@@ -232,7 +232,7 @@ contract JayDerivLiquidityStaking is ReentrancyGuard, Ownable {
             return
                 rewardPerTokenStored +
                 ((rewardToken.balanceOf(address(this)) +
-                    (rewardToken.balanceOf(address(FEE_ADDRESS)) * 2 / 3) -
+                    (rewardToken.balanceOf(address(FEE_ADDRESS)) * 2 / 4) -
                     (previusRewardTotal)) * (FACTOR)) /
                 (totalAmountStaked);
         else return 0;
