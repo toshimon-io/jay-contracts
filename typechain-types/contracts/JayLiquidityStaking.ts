@@ -24,7 +24,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../common";
 
 export interface JayLiquidityStakingInterface extends utils.Interface {
@@ -43,6 +42,8 @@ export interface JayLiquidityStakingInterface extends utils.Interface {
     "renounceOwnership()": FunctionFragment;
     "rewardPerTokenStored()": FunctionFragment;
     "setFeeAddress(address)": FunctionFragment;
+    "setStart()": FunctionFragment;
+    "start()": FunctionFragment;
     "totalAmountStaked()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "userInfo(address)": FunctionFragment;
@@ -65,6 +66,8 @@ export interface JayLiquidityStakingInterface extends utils.Interface {
       | "renounceOwnership"
       | "rewardPerTokenStored"
       | "setFeeAddress"
+      | "setStart"
+      | "start"
       | "totalAmountStaked"
       | "transferOwnership"
       | "userInfo"
@@ -73,21 +76,15 @@ export interface JayLiquidityStakingInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "deposit",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "getBal", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getReward",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "getReward", values: [string]): string;
   encodeFunctionData(
     functionFragment: "getRewardPerTokenStored",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "getStaked",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "getStaked", values: [string]): string;
   encodeFunctionData(
     functionFragment: "getTotalStaked",
     values?: undefined
@@ -95,11 +92,7 @@ export interface JayLiquidityStakingInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "init", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "initalize",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>[],
-      PromiseOrValue<BigNumberish>[]
-    ]
+    values: [BigNumberish, string[], BigNumberish[]]
   ): string;
   encodeFunctionData(
     functionFragment: "liquidityToken",
@@ -120,23 +113,22 @@ export interface JayLiquidityStakingInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setFeeAddress",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "setStart", values?: undefined): string;
+  encodeFunctionData(functionFragment: "start", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalAmountStaked",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "userInfo",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "userInfo", values: [string]): string;
   encodeFunctionData(
     functionFragment: "withdraw",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
 
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
@@ -174,6 +166,8 @@ export interface JayLiquidityStakingInterface extends utils.Interface {
     functionFragment: "setFeeAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setStart", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "start", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalAmountStaked",
     data: BytesLike
@@ -265,21 +259,21 @@ export interface JayLiquidityStaking extends BaseContract {
 
   functions: {
     deposit(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getBal(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getReward(
-      _address: PromiseOrValue<string>,
+      _address: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     getRewardPerTokenStored(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getStaked(
-      _address: PromiseOrValue<string>,
+      _address: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -288,10 +282,10 @@ export interface JayLiquidityStaking extends BaseContract {
     init(overrides?: CallOverrides): Promise<[boolean]>;
 
     initalize(
-      _initialLPs: PromiseOrValue<BigNumberish>,
-      _addresses: PromiseOrValue<string>[],
-      _balances: PromiseOrValue<BigNumberish>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _initialLPs: BigNumberish,
+      _addresses: string[],
+      _balances: BigNumberish[],
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     liquidityToken(overrides?: CallOverrides): Promise<[string]>;
@@ -301,25 +295,31 @@ export interface JayLiquidityStaking extends BaseContract {
     previusRewardTotal(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     rewardPerTokenStored(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     setFeeAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _address: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    setStart(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    start(overrides?: CallOverrides): Promise<[boolean]>;
 
     totalAmountStaked(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     userInfo(
-      arg0: PromiseOrValue<string>,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & {
@@ -329,39 +329,33 @@ export interface JayLiquidityStaking extends BaseContract {
     >;
 
     withdraw(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
   deposit(
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getBal(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getReward(
-    _address: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getReward(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   getRewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getStaked(
-    _address: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getStaked(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   getTotalStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
   init(overrides?: CallOverrides): Promise<boolean>;
 
   initalize(
-    _initialLPs: PromiseOrValue<BigNumberish>,
-    _addresses: PromiseOrValue<string>[],
-    _balances: PromiseOrValue<BigNumberish>[],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _initialLPs: BigNumberish,
+    _addresses: string[],
+    _balances: BigNumberish[],
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   liquidityToken(overrides?: CallOverrides): Promise<string>;
@@ -371,25 +365,31 @@ export interface JayLiquidityStaking extends BaseContract {
   previusRewardTotal(overrides?: CallOverrides): Promise<BigNumber>;
 
   renounceOwnership(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   rewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
   setFeeAddress(
-    _address: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _address: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  setStart(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  start(overrides?: CallOverrides): Promise<boolean>;
 
   totalAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
-    newOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newOwner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   userInfo(
-    arg0: PromiseOrValue<string>,
+    arg0: string,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & {
@@ -399,38 +399,29 @@ export interface JayLiquidityStaking extends BaseContract {
   >;
 
   withdraw(
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    deposit(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    deposit(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     getBal(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getReward(
-      _address: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getReward(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getStaked(
-      _address: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getStaked(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
     init(overrides?: CallOverrides): Promise<boolean>;
 
     initalize(
-      _initialLPs: PromiseOrValue<BigNumberish>,
-      _addresses: PromiseOrValue<string>[],
-      _balances: PromiseOrValue<BigNumberish>[],
+      _initialLPs: BigNumberish,
+      _addresses: string[],
+      _balances: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -444,20 +435,21 @@ export interface JayLiquidityStaking extends BaseContract {
 
     rewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setFeeAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setFeeAddress(_address: string, overrides?: CallOverrides): Promise<void>;
+
+    setStart(overrides?: CallOverrides): Promise<void>;
+
+    start(overrides?: CallOverrides): Promise<boolean>;
 
     totalAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
+      newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     userInfo(
-      arg0: PromiseOrValue<string>,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & {
@@ -466,79 +458,61 @@ export interface JayLiquidityStaking extends BaseContract {
       }
     >;
 
-    withdraw(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
     "Deposit(address,uint256)"(
-      user?: PromiseOrValue<string> | null,
+      user?: string | null,
       amount?: null
     ): DepositEventFilter;
-    Deposit(
-      user?: PromiseOrValue<string> | null,
-      amount?: null
-    ): DepositEventFilter;
+    Deposit(user?: string | null, amount?: null): DepositEventFilter;
 
     "Harvest(address,uint256)"(
-      user?: PromiseOrValue<string> | null,
+      user?: string | null,
       harvestedAmount?: null
     ): HarvestEventFilter;
-    Harvest(
-      user?: PromiseOrValue<string> | null,
-      harvestedAmount?: null
-    ): HarvestEventFilter;
+    Harvest(user?: string | null, harvestedAmount?: null): HarvestEventFilter;
 
     "OwnershipTransferred(address,address)"(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
+      previousOwner?: string | null,
+      newOwner?: string | null
     ): OwnershipTransferredEventFilter;
     OwnershipTransferred(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
+      previousOwner?: string | null,
+      newOwner?: string | null
     ): OwnershipTransferredEventFilter;
 
     "Withdraw(address,uint256)"(
-      user?: PromiseOrValue<string> | null,
+      user?: string | null,
       amount?: null
     ): WithdrawEventFilter;
-    Withdraw(
-      user?: PromiseOrValue<string> | null,
-      amount?: null
-    ): WithdrawEventFilter;
+    Withdraw(user?: string | null, amount?: null): WithdrawEventFilter;
   };
 
   estimateGas: {
     deposit(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     getBal(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getReward(
-      _address: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getReward(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getStaked(
-      _address: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getStaked(_address: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
     init(overrides?: CallOverrides): Promise<BigNumber>;
 
     initalize(
-      _initialLPs: PromiseOrValue<BigNumberish>,
-      _addresses: PromiseOrValue<string>[],
-      _balances: PromiseOrValue<BigNumberish>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _initialLPs: BigNumberish,
+      _addresses: string[],
+      _balances: BigNumberish[],
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     liquidityToken(overrides?: CallOverrides): Promise<BigNumber>;
@@ -548,44 +522,45 @@ export interface JayLiquidityStaking extends BaseContract {
     previusRewardTotal(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     rewardPerTokenStored(overrides?: CallOverrides): Promise<BigNumber>;
 
     setFeeAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _address: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    setStart(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+
+    start(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    userInfo(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    userInfo(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     deposit(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getBal(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getReward(
-      _address: PromiseOrValue<string>,
+      _address: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -594,7 +569,7 @@ export interface JayLiquidityStaking extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getStaked(
-      _address: PromiseOrValue<string>,
+      _address: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -603,10 +578,10 @@ export interface JayLiquidityStaking extends BaseContract {
     init(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initalize(
-      _initialLPs: PromiseOrValue<BigNumberish>,
-      _addresses: PromiseOrValue<string>[],
-      _balances: PromiseOrValue<BigNumberish>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _initialLPs: BigNumberish,
+      _addresses: string[],
+      _balances: BigNumberish[],
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     liquidityToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -618,7 +593,7 @@ export interface JayLiquidityStaking extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     rewardPerTokenStored(
@@ -626,25 +601,31 @@ export interface JayLiquidityStaking extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setFeeAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _address: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    setStart(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    start(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalAmountStaked(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     userInfo(
-      arg0: PromiseOrValue<string>,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     withdraw(
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

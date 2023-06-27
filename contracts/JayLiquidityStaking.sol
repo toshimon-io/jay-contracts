@@ -32,6 +32,8 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
 
     bool public init = false;
 
+    bool public start = false;
+
     event Deposit(address indexed user, uint256 amount);
     event Harvest(address indexed user, uint256 harvestedAmount);
     event Withdraw(address indexed user, uint256 amount);
@@ -64,6 +66,12 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
         require(total == _initialLPs, "Totals dont match");
         totalAmountStaked = total;
         liquidityToken.transferFrom(msg.sender, address(this), _initialLPs);
+    }
+
+        
+    // start trading
+    function setStart() public onlyOwner {
+        start = true;
     }
 
     /*
@@ -141,6 +149,7 @@ contract JayLiquidityStaking is ReentrancyGuard, Ownable {
      * @notice Withdraw staked tokens and collect reward tokens
      */
     function withdraw(uint256 amount) external nonReentrant {
+        require(start);
         // Get the users pending rewards and update contract state
         uint256 pendingRewards = claim();
 

@@ -11,13 +11,13 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     uint256 public constant MIN = 1000;
     uint256 public MAX = 1 * 10 ** 28;
 
-    uint256 public totalEth = msg.value;
-
     uint16 public SELL_FEE = 900;
     uint16 public BUY_FEE = 900;
     uint16 public constant FEE_BASE_1000 = 1000;
 
     uint8 public constant FEES = 33;
+
+    bool public start = false;
 
     uint128 public constant ETHinWEI = 1 * 10 ** 18;
 
@@ -28,8 +28,11 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
 
     constructor() payable ERC20("JayPeggers", "JAY") {
         _mint(msg.sender, msg.value * MIN);
-        totalEth = msg.value;
         transfer(0x000000000000000000000000000000000000dEaD, 10000);
+    }
+    
+    function setStart() public onlyOwner {
+        start = true;
     }
 
     //Will be set to 100m eth value after 1 hr
@@ -49,20 +52,17 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         _burn(msg.sender, jay);
 
         // Payment to sender
-        uint256 ethToSender = (eth * SELL_FEE) / FEE_BASE_1000;
-        sendEth(msg.sender, ethToSender);
+        sendEth(msg.sender, (eth * SELL_FEE) / FEE_BASE_1000);
 
         // Team fee
-        uint256 ethToFeeAddress = eth / FEES;
-        sendEth(FEE_ADDRESS, ethToFeeAddress);
-
-        totalEth -= (ethToSender + ethToFeeAddress);
+        sendEth(FEE_ADDRESS, eth / FEES);
 
         emit Price(block.timestamp, jay, eth);
     }
 
     // Buy Jay
     function buy(address reciever) external payable nonReentrant {
+        require(start);
         require(msg.value > MIN && msg.value < MAX, "must trade over min");
 
         // Mint Jay to sender
@@ -70,20 +70,17 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
         _mint(reciever, (jay * BUY_FEE) / FEE_BASE_1000);
 
         // Team fee
-        uint256 ethToFeeAddress = msg.value / FEES;
-        sendEth(FEE_ADDRESS, ethToFeeAddress);
-
-        totalEth += (msg.value - ethToFeeAddress);
+        sendEth(FEE_ADDRESS, msg.value / FEES);
 
         emit Price(block.timestamp, jay, msg.value);
     }
 
     function JAYtoETH(uint256 value) public view returns (uint256) {
-        return (value * totalEth) / totalSupply();
+        return (value * address(this).balance) / totalSupply();
     }
 
     function ETHtoJAY(uint256 value) public view returns (uint256) {
-        return (value * totalSupply()) / (totalEth);
+        return (value * totalSupply()) / (address(this).balance - value);
     }
 
     function sendEth(address _address, uint256 _value) internal {
@@ -113,26 +110,20 @@ contract JAY is ERC20Burnable, Ownable, ReentrancyGuard {
     function getBuyJay(uint256 amount) external view returns (uint256) {
         return
             (amount * (totalSupply()) * (BUY_FEE)) /
-            (totalEth) /
+            (address(this).balance) /
             (FEE_BASE_1000);
     }
 
     function getSellJay(uint256 amount) external view returns (uint256) {
         return
-            ((amount * totalEth) * (SELL_FEE)) /
+            ((amount * address(this).balance) * (SELL_FEE)) /
             (totalSupply()) /
             (FEE_BASE_1000);
     }
 
-    function emergencyFixTotalEth() external nonReentrant {
-        totalEth = address(this).balance;
-    }
+    function deposit() public payable {}
 
-    function getTotalEth() external view returns (uint256) {
-        return totalEth;
-    }
+    receive() external payable {}
 
-    receive() external payable {
-        totalEth += msg.value;
-    }
+    fallback() external payable {}
 }

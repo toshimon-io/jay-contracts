@@ -25,7 +25,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../common";
 
 export interface JayMartInterface extends utils.Interface {
@@ -66,23 +65,11 @@ export interface JayMartInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "buyJay",
-    values: [
-      PromiseOrValue<string>[],
-      PromiseOrValue<BigNumberish>[],
-      PromiseOrValue<string>[],
-      PromiseOrValue<BigNumberish>[],
-      PromiseOrValue<BigNumberish>[]
-    ]
+    values: [string[], BigNumberish[], string[], BigNumberish[], BigNumberish[]]
   ): string;
   encodeFunctionData(
     functionFragment: "buyNFTs",
-    values: [
-      PromiseOrValue<string>[],
-      PromiseOrValue<BigNumberish>[],
-      PromiseOrValue<string>[],
-      PromiseOrValue<BigNumberish>[],
-      PromiseOrValue<BigNumberish>[]
-    ]
+    values: [string[], BigNumberish[], string[], BigNumberish[], BigNumberish[]]
   ): string;
   encodeFunctionData(functionFragment: "getFees", values?: undefined): string;
   encodeFunctionData(
@@ -91,31 +78,20 @@ export interface JayMartInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getPriceBuy",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getPriceSell",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "getTotals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onERC1155Received",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
+    values: [string, string, BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "onERC721Received",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
+    values: [string, string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -124,11 +100,11 @@ export interface JayMartInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setTEAMWallet",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "updateFees",
@@ -221,21 +197,21 @@ export interface JayMart extends BaseContract {
 
   functions: {
     buyJay(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     buyNFTs(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getFees(
@@ -245,71 +221,71 @@ export interface JayMart extends BaseContract {
     getLatestPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getPriceBuy(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     getPriceSell(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     getTotals(overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
     onERC1155Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BigNumberish>,
-      arg4: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setTEAMWallet(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _address: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     updateFees(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
   buyJay(
-    erc721TokenAddress: PromiseOrValue<string>[],
-    erc721Ids: PromiseOrValue<BigNumberish>[],
-    erc1155TokenAddress: PromiseOrValue<string>[],
-    erc1155Ids: PromiseOrValue<BigNumberish>[],
-    erc1155Amounts: PromiseOrValue<BigNumberish>[],
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    erc721TokenAddress: string[],
+    erc721Ids: BigNumberish[],
+    erc1155TokenAddress: string[],
+    erc1155Ids: BigNumberish[],
+    erc1155Amounts: BigNumberish[],
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   buyNFTs(
-    erc721TokenAddress: PromiseOrValue<string>[],
-    erc721Ids: PromiseOrValue<BigNumberish>[],
-    erc1155TokenAddress: PromiseOrValue<string>[],
-    erc1155Ids: PromiseOrValue<BigNumberish>[],
-    erc1155Amounts: PromiseOrValue<BigNumberish>[],
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    erc721TokenAddress: string[],
+    erc721Ids: BigNumberish[],
+    erc1155TokenAddress: string[],
+    erc1155Ids: BigNumberish[],
+    erc1155Amounts: BigNumberish[],
+    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getFees(
@@ -319,70 +295,70 @@ export interface JayMart extends BaseContract {
   getLatestPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
   getPriceBuy(
-    total: PromiseOrValue<BigNumberish>,
+    total: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   getPriceSell(
-    total: PromiseOrValue<BigNumberish>,
+    total: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   getTotals(overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
   onERC1155Received(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    arg2: PromiseOrValue<BigNumberish>,
-    arg3: PromiseOrValue<BigNumberish>,
-    arg4: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    arg0: string,
+    arg1: string,
+    arg2: BigNumberish,
+    arg3: BigNumberish,
+    arg4: BytesLike,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   onERC721Received(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    arg2: PromiseOrValue<BigNumberish>,
-    arg3: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    arg0: string,
+    arg1: string,
+    arg2: BigNumberish,
+    arg3: BytesLike,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setTEAMWallet(
-    _address: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _address: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   transferOwnership(
-    newOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    newOwner: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   updateFees(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     buyJay(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     buyNFTs(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -393,31 +369,31 @@ export interface JayMart extends BaseContract {
     getLatestPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPriceBuy(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPriceSell(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getTotals(overrides?: CallOverrides): Promise<[BigNumber, BigNumber]>;
 
     onERC1155Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BigNumberish>,
-      arg4: PromiseOrValue<BytesLike>,
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike,
       overrides?: CallOverrides
     ): Promise<string>;
 
     onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -425,13 +401,10 @@ export interface JayMart extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    setTEAMWallet(
-      _address: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setTEAMWallet(_address: string, overrides?: CallOverrides): Promise<void>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
+      newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -442,32 +415,32 @@ export interface JayMart extends BaseContract {
 
   filters: {
     "OwnershipTransferred(address,address)"(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
+      previousOwner?: string | null,
+      newOwner?: string | null
     ): OwnershipTransferredEventFilter;
     OwnershipTransferred(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
+      previousOwner?: string | null,
+      newOwner?: string | null
     ): OwnershipTransferredEventFilter;
   };
 
   estimateGas: {
     buyJay(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     buyNFTs(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getFees(overrides?: CallOverrides): Promise<BigNumber>;
@@ -475,72 +448,70 @@ export interface JayMart extends BaseContract {
     getLatestPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPriceBuy(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPriceSell(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getTotals(overrides?: CallOverrides): Promise<BigNumber>;
 
     onERC1155Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BigNumberish>,
-      arg4: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setTEAMWallet(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _address: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    updateFees(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    updateFees(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
   };
 
   populateTransaction: {
     buyJay(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     buyNFTs(
-      erc721TokenAddress: PromiseOrValue<string>[],
-      erc721Ids: PromiseOrValue<BigNumberish>[],
-      erc1155TokenAddress: PromiseOrValue<string>[],
-      erc1155Ids: PromiseOrValue<BigNumberish>[],
-      erc1155Amounts: PromiseOrValue<BigNumberish>[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      erc721TokenAddress: string[],
+      erc721Ids: BigNumberish[],
+      erc1155TokenAddress: string[],
+      erc1155Ids: BigNumberish[],
+      erc1155Amounts: BigNumberish[],
+      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getFees(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -548,52 +519,52 @@ export interface JayMart extends BaseContract {
     getLatestPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPriceBuy(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getPriceSell(
-      total: PromiseOrValue<BigNumberish>,
+      total: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getTotals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     onERC1155Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BigNumberish>,
-      arg4: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BigNumberish,
+      arg4: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     onERC721Received(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      arg1: string,
+      arg2: BigNumberish,
+      arg3: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setTEAMWallet(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      _address: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      newOwner: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     updateFees(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -3,7 +3,6 @@
 /* eslint-disable */
 import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
 import type { Provider, TransactionRequest } from "@ethersproject/providers";
-import type { PromiseOrValue } from "../../../../common";
 import type {
   UniswapV2Router02,
   UniswapV2Router02Interface,
@@ -1004,9 +1003,9 @@ export class UniswapV2Router02__factory extends ContractFactory {
   }
 
   override deploy(
-    _factory: PromiseOrValue<string>,
-    _WETH: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _factory: string,
+    _WETH: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<UniswapV2Router02> {
     return super.deploy(
       _factory,
@@ -1015,9 +1014,9 @@ export class UniswapV2Router02__factory extends ContractFactory {
     ) as Promise<UniswapV2Router02>;
   }
   override getDeployTransaction(
-    _factory: PromiseOrValue<string>,
-    _WETH: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    _factory: string,
+    _WETH: string,
+    overrides?: Overrides & { from?: string }
   ): TransactionRequest {
     return super.getDeployTransaction(_factory, _WETH, overrides || {});
   }

@@ -41,10 +41,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20__factory>;
     getContractFactory(
-      name: "IERC20Permit",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC20Permit__factory>;
-    getContractFactory(
       name: "ERC20Burnable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20Burnable__factory>;
@@ -52,6 +48,10 @@ declare module "hardhat/types/runtime" {
       name: "IERC20Metadata",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(
+      name: "IERC20Permit",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Permit__factory>;
     getContractFactory(
       name: "IERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -81,6 +81,18 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC165__factory>;
     getContractFactory(
+      name: "JayERC20Deriv",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.JayERC20Deriv__factory>;
+    getContractFactory(
+      name: "JayDerivFeeSplitter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.JayDerivFeeSplitter__factory>;
+    getContractFactory(
+      name: "JayDerivLiquidityStaking",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.JayDerivLiquidityStaking__factory>;
+    getContractFactory(
       name: "JAY",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.JAY__factory>;
@@ -100,10 +112,6 @@ declare module "hardhat/types/runtime" {
       name: "JayMart",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.JayMart__factory>;
-    getContractFactory(
-      name: "JAYusingContractBal",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.JAYusingContractBal__factory>;
     getContractFactory(
       name: "RockPaperScissors",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -213,11 +221,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC20>;
     getContractAt(
-      name: "IERC20Permit",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC20Permit>;
-    getContractAt(
       name: "ERC20Burnable",
       address: string,
       signer?: ethers.Signer
@@ -227,6 +230,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IERC20Metadata>;
+    getContractAt(
+      name: "IERC20Permit",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Permit>;
     getContractAt(
       name: "IERC20",
       address: string,
@@ -263,6 +271,21 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC165>;
     getContractAt(
+      name: "JayERC20Deriv",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.JayERC20Deriv>;
+    getContractAt(
+      name: "JayDerivFeeSplitter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.JayDerivFeeSplitter>;
+    getContractAt(
+      name: "JayDerivLiquidityStaking",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.JayDerivLiquidityStaking>;
+    getContractAt(
       name: "JAY",
       address: string,
       signer?: ethers.Signer
@@ -287,11 +310,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.JayMart>;
-    getContractAt(
-      name: "JAYusingContractBal",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.JAYusingContractBal>;
     getContractAt(
       name: "RockPaperScissors",
       address: string,

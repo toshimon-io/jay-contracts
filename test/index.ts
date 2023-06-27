@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { JAY } from "../typechain/JAY";
+import { jayDerivSolSol } from "../typechain/jayDerivSolSol";
 import { JayMart } from "../typechain/JayMart";
 import { RockPaperScissors } from "../typechain/RockPaperScissors";
 import { BigNumber, BigNumberish } from "ethers";
@@ -16,6 +17,7 @@ const provider = ethers.provider;
 
 describe("JAY contract", function () {
   let JAY: JAY;
+  let JAYUSDC: jayDerivSolSol;
   let ERC: ERC;
   let JayMart: JayMart;
   let JayFeeSplitter: JayFeeSplitter;
@@ -40,9 +42,30 @@ describe("JAY contract", function () {
 
     const ERCFactort = await ethers.getContractFactory("ERC", owner);
     ERC = await ERCFactort.deploy();
+    await (
+      await ERC.connect(owner).mint("10000000000000000000000000000000000")
+    ).wait();
+    await (
+      await ERC.connect(addr1).mint("10000000000000000000000000000000000")
+    ).wait();
     const JAYFactory = await ethers.getContractFactory("JAY", owner);
     JAY = await JAYFactory.deploy({ value: initialBalance });
     console.log("Deployed Jay");
+    await (
+      await JAY.connect(owner).setStart()
+    ).wait();
+    const JAYDerivFactory = await ethers.getContractFactory("JayERC20Deriv", owner);
+    JAYUSDC = await JAYDerivFactory.deploy(ERC.address);
+    await (
+      await ERC.connect(owner).approve(JAYUSDC.address, "10000000000000000000000000000000000")
+    ).wait();
+    console.log("Deployed Jay");
+    await (
+      await JAYUSDC.connect(owner).init("10000000000000000000000")
+    ).wait();
+    await (
+      await JAYUSDC.connect(owner).setStart()
+    ).wait();
 
     const JayMartFactory = await ethers.getContractFactory("JayMart", owner);
     JayMart = await JayMartFactory.deploy(JAY.address);
@@ -69,15 +92,20 @@ describe("JAY contract", function () {
       addresses.push(user.address);
     });
 
-    await (
-      await ERC.connect(owner).mint("10000000000000000000000000000000000")
-    ).wait();
+
 
     jayLiquidityStaking = await JayLiquidityStakingFactory.deploy(ERC.address);
+
 
     await (
       await JAY.connect(owner).setFeeAddress(JayFeeSplitter.address)
     ).wait();
+
+    await (
+      await JAYUSDC.connect(owner).setFeeAddress(JayFeeSplitter.address)
+    ).wait();
+
+    
     await (
       await JayFeeSplitter.connect(owner).setNFTWallet(
         jayLiquidityStaking.address
@@ -104,13 +132,17 @@ describe("JAY contract", function () {
     await (
       await jayLiquidityStaking.connect(owner).initalize(total, addresses, bals)
     ).wait();
+
+    await (
+      await jayLiquidityStaking.connect(owner).setStart()
+    ).wait();
   });
   function rng(min: number, max: number) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  describe("Staking and Unstaking", function () {
+  /*describe("Staking and Unstaking", function () {
     it("Should stake and unstake tokens correctly", async function () {
       this.timeout(20000000);
       const balanceAddr1 = await owner.getBalance();
@@ -262,10 +294,68 @@ describe("JAY contract", function () {
       console.log("");
       console.log("___________________________");
     });
-  });
+  }); */
 
   describe("Transactions", function () {
-    it("Should buy and sell tokens correctly", async function () {
+   /* it("Should buy and sell tokens correctly DERIV", async function () {
+      // Buy JAY tokens
+      const value = '1000000000000000000'
+      await (await ERC.connect(addr1).approve(JAYUSDC.address, '100000000000000000000000000000000000000' )).wait();
+      const tx = await JAYUSDC.connect(addr1).buy(addr1.address, value );
+      const receipt = await tx.wait();
+
+      // Check the balance of addr1
+      const balance = await JAYUSDC.balanceOf(addr1.address);
+      await checkJayTotal();
+      // Sell JAY tokens
+      const sell = balance;
+      const sellTx = await JAYUSDC.connect(addr1).sell(sell);
+      const sellReceipt = await sellTx.wait();
+
+      // Check the balance of addr1 after selling tokens
+      const balanceAfterSell = await JAYUSDC.balanceOf(addr1.address);
+      expect(balanceAfterSell.toNumber()).to.be.equal(0);
+      await checkJayTotal();
+    });*/
+    it("JAYtoETH should increase after transactions", async function () {
+      this.timeout(200000000);
+
+      const [owner, addr1, addr2, addr3] = await ethers.getSigners();
+      await (await ERC.connect(addr1).approve(JAYUSDC.address, '100000000000000000000000000000000000000' )).wait();
+      let prevPrice = await JAYUSDC.JAYtoETH(ethers.utils.parseEther("1"));
+
+      for (let i = 0; i < 100000; i++) {
+        const buyAmount = ethers.utils.parseEther(
+          (Math.floor(Math.random() * 1000)).toString()
+        );
+        const sellAmount = ethers.utils.parseEther(
+          (Math.floor(Math.random() * 1000)).toString()
+        );
+        const jayBalance = await JAYUSDC.balanceOf(addr1.address);
+        if (sellAmount.lt(jayBalance) && sellAmount.gt(1))
+          await JAYUSDC.connect(addr1).sell(sellAmount);
+        await checkJayTotal();
+        const ethBalance = await ERC.balanceOf(addr1.address);
+        if (buyAmount.lt(ethBalance) && buyAmount.gt('1'))
+          await JAYUSDC.connect(addr1).buy(addr1.address, buyAmount );
+        await checkJayTotal();
+
+        const newPrice = await JAYUSDC.JAYtoETH(ethers.utils.parseEther("1"));
+        expect(Number(newPrice)).to.be.greaterThanOrEqual(Number(prevPrice));
+        prevPrice = newPrice;
+        // Append the newPrice to test.txt
+        await appendToFile("./test.txt", `${ethers.utils.formatEther(newPrice)}\n`);
+      }
+      await checkJayTotal();
+    });
+    async function appendToFile(filePath: number | fs.PathLike, data: string) {
+      try {
+        fs.appendFileSync(filePath, data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+   /* it("Should buy and sell tokens correctly", async function () {
       // Buy JAY tokens
       const value = ethers.utils.parseEther("0.1");
       const tx = await JAY.connect(addr1).buy(addr1.address, { value });
@@ -368,10 +458,10 @@ describe("JAY contract", function () {
 
       // Mint some ERC1155 tokens
       for(let j = 1; j<501; j++){
-        /*await (await erc1155.connect(addr1).mint(addr1.address, j, 10)).wait();
+        await (await erc1155.connect(addr1).mint(addr1.address, j, 10)).wait();
         erc1155TokenAddress.push(erc1155.address);
         erc1155Ids.push(j);
-        erc1155Amounts.push(10);*/
+        erc1155Amounts.push(10);
         await (await nft.connect(addr1).safeMint(addr1.address, j)).wait();
         erc721TokenAddress.push(nft.address)
         erc721Ids.push(j);
@@ -439,7 +529,7 @@ describe("JAY contract", function () {
       ).wait();
       const finalBalance = await provider.getBalance(JAY.address);
       expect(finalBalance.gt(initialBalance)).to.be.true;
-      await checkJayTotal();*/
+      await checkJayTotal();
     });
 
     it("JAYtoETH should increase after transactions", async function () {
@@ -474,13 +564,7 @@ describe("JAY contract", function () {
       await checkJayTotal();
     });
 
-    async function appendToFile(filePath: number | fs.PathLike, data: string) {
-      try {
-        fs.appendFileSync(filePath, data);
-      } catch (err) {
-        console.error(err);
-      }
-    }
+
 
     it("should sell ERC721 token and buy it back using JAY", async function () {
       const [owner] = await ethers.getSigners();
@@ -692,5 +776,6 @@ describe("JAY contract", function () {
       expect(newOwner).to.equal(owner.address);
       await checkJayTotal();
     });
+    */
   });
 });

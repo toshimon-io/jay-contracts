@@ -24,7 +24,6 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
-  PromiseOrValue,
 } from "../../../common";
 
 export interface IUniswapV2FactoryInterface extends utils.Interface {
@@ -53,7 +52,7 @@ export interface IUniswapV2FactoryInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "allPairs",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "allPairsLength",
@@ -61,7 +60,7 @@ export interface IUniswapV2FactoryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createPair",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "feeTo", values?: undefined): string;
   encodeFunctionData(
@@ -70,15 +69,12 @@ export interface IUniswapV2FactoryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getPair",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [string, string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "setFeeTo",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "setFeeTo", values: [string]): string;
   encodeFunctionData(
     functionFragment: "setFeeToSetter",
-    values: [PromiseOrValue<string>]
+    values: [string]
   ): string;
 
   decodeFunctionResult(functionFragment: "allPairs", data: BytesLike): Result;
@@ -147,16 +143,16 @@ export interface IUniswapV2Factory extends BaseContract {
 
   functions: {
     allPairs(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string] & { pair: string }>;
 
     allPairsLength(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     createPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      tokenA: string,
+      tokenB: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     feeTo(overrides?: CallOverrides): Promise<[string]>;
@@ -164,33 +160,30 @@ export interface IUniswapV2Factory extends BaseContract {
     feeToSetter(overrides?: CallOverrides): Promise<[string]>;
 
     getPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
+      tokenA: string,
+      tokenB: string,
       overrides?: CallOverrides
     ): Promise<[string] & { pair: string }>;
 
     setFeeTo(
-      arg0: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setFeeToSetter(
-      arg0: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
 
-  allPairs(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  allPairs(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   allPairsLength(overrides?: CallOverrides): Promise<BigNumber>;
 
   createPair(
-    tokenA: PromiseOrValue<string>,
-    tokenB: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    tokenA: string,
+    tokenB: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   feeTo(overrides?: CallOverrides): Promise<string>;
@@ -198,32 +191,29 @@ export interface IUniswapV2Factory extends BaseContract {
   feeToSetter(overrides?: CallOverrides): Promise<string>;
 
   getPair(
-    tokenA: PromiseOrValue<string>,
-    tokenB: PromiseOrValue<string>,
+    tokenA: string,
+    tokenB: string,
     overrides?: CallOverrides
   ): Promise<string>;
 
   setFeeTo(
-    arg0: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    arg0: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setFeeToSetter(
-    arg0: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    arg0: string,
+    overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    allPairs(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    allPairs(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     allPairsLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     createPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
+      tokenA: string,
+      tokenB: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -232,49 +222,40 @@ export interface IUniswapV2Factory extends BaseContract {
     feeToSetter(overrides?: CallOverrides): Promise<string>;
 
     getPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
+      tokenA: string,
+      tokenB: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    setFeeTo(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setFeeTo(arg0: string, overrides?: CallOverrides): Promise<void>;
 
-    setFeeToSetter(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setFeeToSetter(arg0: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
     "PairCreated(address,address,address,uint256)"(
-      token0?: PromiseOrValue<string> | null,
-      token1?: PromiseOrValue<string> | null,
+      token0?: string | null,
+      token1?: string | null,
       pair?: null,
       arg3?: null
     ): PairCreatedEventFilter;
     PairCreated(
-      token0?: PromiseOrValue<string> | null,
-      token1?: PromiseOrValue<string> | null,
+      token0?: string | null,
+      token1?: string | null,
       pair?: null,
       arg3?: null
     ): PairCreatedEventFilter;
   };
 
   estimateGas: {
-    allPairs(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    allPairs(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     allPairsLength(overrides?: CallOverrides): Promise<BigNumber>;
 
     createPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      tokenA: string,
+      tokenB: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     feeTo(overrides?: CallOverrides): Promise<BigNumber>;
@@ -282,34 +263,34 @@ export interface IUniswapV2Factory extends BaseContract {
     feeToSetter(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
+      tokenA: string,
+      tokenB: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     setFeeTo(
-      arg0: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setFeeToSetter(
-      arg0: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     allPairs(
-      arg0: PromiseOrValue<BigNumberish>,
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     allPairsLength(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     createPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      tokenA: string,
+      tokenB: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     feeTo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -317,19 +298,19 @@ export interface IUniswapV2Factory extends BaseContract {
     feeToSetter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPair(
-      tokenA: PromiseOrValue<string>,
-      tokenB: PromiseOrValue<string>,
+      tokenA: string,
+      tokenB: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     setFeeTo(
-      arg0: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setFeeToSetter(
-      arg0: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      arg0: string,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

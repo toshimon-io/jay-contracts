@@ -15,6 +15,9 @@ import { JayLiquidityStaking } from "../typechain/JayLiquidityStaking";
 import { JayFeeSplitter } from "../typechain/JayFeeSplitter";
 import { balances } from "../migData/balances";
 import { ERC } from "../typechain/ERC";
+import * as dotenv from "dotenv";
+var fs = require('fs');
+dotenv.config();
 
 function rng(min: number, max: number) {
   // min and max included
@@ -32,6 +35,12 @@ async function main() {
   let addr3: SignerWithAddress;
   let addr4: SignerWithAddress;
   let jayLiquidityStaking: JayLiquidityStaking;
+  fs.readFile('env.json', 'utf8', async function readFileCallback(err: any, data: string | Buffer){
+    if (err){
+        console.log(err);
+    } else {
+    let obj = JSON.parse(data); //now it an object
+    
 
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -44,13 +53,14 @@ async function main() {
   [owner] = await ethers.getSigners();
 
   const ERCFactort = await ethers.getContractFactory("ERC", owner);
-  ERC = ERCFactort.attach("0x6C229b9F9b6df708331015F5E1b36D44e59cD9ad");
+  ERC = ERCFactort.attach(obj.UniPair);
   const JAYFactory = await ethers.getContractFactory("JAY", owner);
-  JAY = JAYFactory.attach("0xd314a11D01E800583E5b0887F9117f7157A10731");
+  JAY = JAYFactory.attach(obj.JayERC20);
+
 
   const JayMartFactory = await ethers.getContractFactory("JayMart", owner);
 
-  JayMart = JayMartFactory.attach("0x37Ed5251E1d5669D4C3807BFf3Ff947e183Efb75");
+  JayMart = JayMartFactory.attach(obj.JayMart);
 
   const JayFeeSplitterFactory = await ethers.getContractFactory(
     "JayFeeSplitter",
@@ -58,7 +68,7 @@ async function main() {
   );
 
   JayFeeSplitter = JayFeeSplitterFactory.attach(
-    "0xdBC37536F2eb612d0ac21daB7122459F81567656"
+   obj.JayFeeSplitter
   );
 
   const JayLiquidityStakingFactory = await ethers.getContractFactory(
@@ -67,7 +77,7 @@ async function main() {
   );
 
   jayLiquidityStaking = JayLiquidityStakingFactory.attach(
-    "0x0e661A2A2410aCc2E2C455d1b142D2101C25cE04"
+    obj.JayLiquidityStaking
   );
 
   let tot = 0;
@@ -125,6 +135,7 @@ async function main() {
   );
   console.log("");
   console.log("___________________________");
+    }});
 }
 
 // We recommend this pattern to be able to use async/await everywhere
