@@ -9,7 +9,6 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -31,14 +30,10 @@ export interface JayERC20DerivInterface extends utils.Interface {
   functions: {
     "BUY_FEE()": FunctionFragment;
     "DECIMALS()": FunctionFragment;
-    "ETHinWEI()": FunctionFragment;
     "ETHtoJAY(uint256)": FunctionFragment;
-    "FEES()": FunctionFragment;
-    "FEE_BASE_1000()": FunctionFragment;
     "JAYNFT()": FunctionFragment;
     "JAYtoETH(uint256)": FunctionFragment;
     "MAX()": FunctionFragment;
-    "MIN()": FunctionFragment;
     "SELL_FEE()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -50,7 +45,6 @@ export interface JayERC20DerivInterface extends utils.Interface {
     "buyNftDiscount(address,uint256)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "deposit()": FunctionFragment;
     "getBuyJay(uint256)": FunctionFragment;
     "getSellJay(uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
@@ -78,14 +72,10 @@ export interface JayERC20DerivInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "BUY_FEE"
       | "DECIMALS"
-      | "ETHinWEI"
       | "ETHtoJAY"
-      | "FEES"
-      | "FEE_BASE_1000"
       | "JAYNFT"
       | "JAYtoETH"
       | "MAX"
-      | "MIN"
       | "SELL_FEE"
       | "allowance"
       | "approve"
@@ -97,7 +87,6 @@ export interface JayERC20DerivInterface extends utils.Interface {
       | "buyNftDiscount"
       | "decimals"
       | "decreaseAllowance"
-      | "deposit"
       | "getBuyJay"
       | "getSellJay"
       | "increaseAllowance"
@@ -123,15 +112,9 @@ export interface JayERC20DerivInterface extends utils.Interface {
 
   encodeFunctionData(functionFragment: "BUY_FEE", values?: undefined): string;
   encodeFunctionData(functionFragment: "DECIMALS", values?: undefined): string;
-  encodeFunctionData(functionFragment: "ETHinWEI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ETHtoJAY",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "FEES", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "FEE_BASE_1000",
-    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "JAYNFT", values?: undefined): string;
   encodeFunctionData(
@@ -139,7 +122,6 @@ export interface JayERC20DerivInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "MAX", values?: undefined): string;
-  encodeFunctionData(functionFragment: "MIN", values?: undefined): string;
   encodeFunctionData(functionFragment: "SELL_FEE", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "allowance",
@@ -172,7 +154,6 @@ export interface JayERC20DerivInterface extends utils.Interface {
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getBuyJay",
     values: [BigNumberish]
@@ -236,17 +217,10 @@ export interface JayERC20DerivInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "BUY_FEE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "DECIMALS", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ETHinWEI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ETHtoJAY", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "FEES", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "FEE_BASE_1000",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "JAYNFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "JAYtoETH", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "MAX", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "MIN", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "SELL_FEE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -267,7 +241,6 @@ export interface JayERC20DerivInterface extends utils.Interface {
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getBuyJay", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getSellJay", data: BytesLike): Result;
   decodeFunctionResult(
@@ -315,7 +288,7 @@ export interface JayERC20DerivInterface extends utils.Interface {
     "Approval(address,address,uint256)": EventFragment;
     "MaxUpdated(uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Price(uint256,uint256,uint256)": EventFragment;
+    "Price(uint256,uint256)": EventFragment;
     "SellFeeUpdated(uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "buyFeeUpdated(uint256)": EventFragment;
@@ -362,14 +335,10 @@ export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface PriceEventObject {
-  time: BigNumber;
   recieved: BigNumber;
   sent: BigNumber;
 }
-export type PriceEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber],
-  PriceEventObject
->;
+export type PriceEvent = TypedEvent<[BigNumber, BigNumber], PriceEventObject>;
 
 export type PriceEventFilter = TypedEventFilter<PriceEvent>;
 
@@ -436,16 +405,10 @@ export interface JayERC20Deriv extends BaseContract {
 
     DECIMALS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    ETHinWEI(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     ETHtoJAY(
       value: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    FEES(overrides?: CallOverrides): Promise<[number]>;
-
-    FEE_BASE_1000(overrides?: CallOverrides): Promise<[number]>;
 
     JAYNFT(overrides?: CallOverrides): Promise<[string]>;
 
@@ -455,8 +418,6 @@ export interface JayERC20Deriv extends BaseContract {
     ): Promise<[BigNumber]>;
 
     MAX(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    MIN(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     SELL_FEE(overrides?: CallOverrides): Promise<[number]>;
 
@@ -505,10 +466,6 @@ export interface JayERC20Deriv extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    deposit(
-      overrides?: PayableOverrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     getBuyJay(
@@ -608,21 +565,13 @@ export interface JayERC20Deriv extends BaseContract {
 
   DECIMALS(overrides?: CallOverrides): Promise<BigNumber>;
 
-  ETHinWEI(overrides?: CallOverrides): Promise<BigNumber>;
-
   ETHtoJAY(value: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-  FEES(overrides?: CallOverrides): Promise<number>;
-
-  FEE_BASE_1000(overrides?: CallOverrides): Promise<number>;
 
   JAYNFT(overrides?: CallOverrides): Promise<string>;
 
   JAYtoETH(value: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MIN(overrides?: CallOverrides): Promise<BigNumber>;
 
   SELL_FEE(overrides?: CallOverrides): Promise<number>;
 
@@ -671,10 +620,6 @@ export interface JayERC20Deriv extends BaseContract {
     spender: string,
     subtractedValue: BigNumberish,
     overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  deposit(
-    overrides?: PayableOverrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   getBuyJay(
@@ -774,16 +719,10 @@ export interface JayERC20Deriv extends BaseContract {
 
     DECIMALS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    ETHinWEI(overrides?: CallOverrides): Promise<BigNumber>;
-
     ETHtoJAY(
       value: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    FEES(overrides?: CallOverrides): Promise<number>;
-
-    FEE_BASE_1000(overrides?: CallOverrides): Promise<number>;
 
     JAYNFT(overrides?: CallOverrides): Promise<string>;
 
@@ -793,8 +732,6 @@ export interface JayERC20Deriv extends BaseContract {
     ): Promise<BigNumber>;
 
     MAX(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MIN(overrides?: CallOverrides): Promise<BigNumber>;
 
     SELL_FEE(overrides?: CallOverrides): Promise<number>;
 
@@ -841,8 +778,6 @@ export interface JayERC20Deriv extends BaseContract {
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    deposit(overrides?: CallOverrides): Promise<void>;
 
     getBuyJay(
       amount: BigNumberish,
@@ -936,12 +871,8 @@ export interface JayERC20Deriv extends BaseContract {
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
 
-    "Price(uint256,uint256,uint256)"(
-      time?: null,
-      recieved?: null,
-      sent?: null
-    ): PriceEventFilter;
-    Price(time?: null, recieved?: null, sent?: null): PriceEventFilter;
+    "Price(uint256,uint256)"(recieved?: null, sent?: null): PriceEventFilter;
+    Price(recieved?: null, sent?: null): PriceEventFilter;
 
     "SellFeeUpdated(uint256)"(sellFee?: null): SellFeeUpdatedEventFilter;
     SellFeeUpdated(sellFee?: null): SellFeeUpdatedEventFilter;
@@ -966,16 +897,10 @@ export interface JayERC20Deriv extends BaseContract {
 
     DECIMALS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    ETHinWEI(overrides?: CallOverrides): Promise<BigNumber>;
-
     ETHtoJAY(
       value: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    FEES(overrides?: CallOverrides): Promise<BigNumber>;
-
-    FEE_BASE_1000(overrides?: CallOverrides): Promise<BigNumber>;
 
     JAYNFT(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -985,8 +910,6 @@ export interface JayERC20Deriv extends BaseContract {
     ): Promise<BigNumber>;
 
     MAX(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MIN(overrides?: CallOverrides): Promise<BigNumber>;
 
     SELL_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1035,10 +958,6 @@ export interface JayERC20Deriv extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
-    deposit(
-      overrides?: PayableOverrides & { from?: string }
     ): Promise<BigNumber>;
 
     getBuyJay(
@@ -1137,16 +1056,10 @@ export interface JayERC20Deriv extends BaseContract {
 
     DECIMALS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    ETHinWEI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     ETHtoJAY(
       value: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    FEES(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    FEE_BASE_1000(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     JAYNFT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1156,8 +1069,6 @@ export interface JayERC20Deriv extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     MAX(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     SELL_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1209,10 +1120,6 @@ export interface JayERC20Deriv extends BaseContract {
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    deposit(
-      overrides?: PayableOverrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     getBuyJay(

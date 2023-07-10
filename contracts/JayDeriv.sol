@@ -18,21 +18,21 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
 
     address payable private FEE_ADDRESS;
 
-    uint256 public constant MIN = 1000;
+    uint256 private constant MIN = 1000;
     uint256 public immutable DECIMALS;
     uint256 public MAX = 1 * 10 ** 28;
 
     uint16 public SELL_FEE = 9000;
     uint16 public BUY_FEE = 9000;
-    uint16 public constant FEE_BASE_1000 = 10000;
+    uint16 private constant FEE_BASE_1000 = 10000;
 
-    uint16 public constant FEES = 25;
+    uint16 private constant FEES = 25;
 
-    bool public start = false;
+    bool public start;
 
-    uint128 public constant ETHinWEI = 1 * 10 ** 18;
+    uint128 private constant ETHinWEI = 1 * 10 ** 18;
 
-    event Price(uint256 time, uint256 recieved, uint256 sent);
+    event Price(uint256 recieved, uint256 sent);
     event MaxUpdated(uint256 max);
     event SellFeeUpdated(uint256 sellFee);
     event buyFeeUpdated(uint256 buyFee);
@@ -41,32 +41,31 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
         backingToken = IERC20(_backingToken);
         DECIMALS = ETHinWEI / (1 * 10 ** IERC20Metadata(_backingToken).decimals());
     }
-    /*function decimals() public view override returns (uint8){
-        return DECIMALS;
-    }*/
-    function setJAYNFT(address _nft) public onlyOwner{
+
+    function setJAYNFT(address _nft) external onlyOwner{
         JAYNFT = IERC721(_nft);
     }
     
-    function init(uint256 value) public onlyOwner {
+    function init(uint256 value) external onlyOwner {
         require(!start);
         backingToken.safeTransferFrom(msg.sender, address(this), value);
         _mint(msg.sender, value * DECIMALS);
         transfer(0x000000000000000000000000000000000000dEaD, 1000);
     }
 
-    function setStart() public onlyOwner {    
+    function setStart() external onlyOwner {    
         start = true;
     }
 
     //Will be set to 100m eth value after 1 hr
-    function setMax(uint256 _max) public onlyOwner {
+    function setMax(uint256 _max) external onlyOwner {
         MAX = _max;
         emit MaxUpdated(_max);
     }
 
     // Sell Jay
     function sellNftDiscount(uint256 jay) external nonReentrant {
+        require(jay > 0, "must trade over 0");
         uint256 discount = JAYNFT.balanceOf(msg.sender) * 3; 
         if(discount > 300) discount = 300; 
         // Total Eth to be sent
@@ -80,7 +79,7 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
         // Team fee
         backingToken.safeTransfer(FEE_ADDRESS, eth / FEES);
 
-        emit Price(block.timestamp, jay, eth);
+        emit Price(jay, eth);
     }
     function buyNftDiscount(address reciever, uint256 amount) external nonReentrant {
         require(start);
@@ -97,10 +96,11 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
         // Team fee
         backingToken.safeTransfer(FEE_ADDRESS, amount / FEES);
 
-        emit Price(block.timestamp, jay, amount);
+        emit Price(jay, amount);
     }
     function sell(uint256 jay) external nonReentrant {
         // Total Eth to be sent
+        require(jay > 0, "must trade over 0");
         uint256 eth = JAYtoETH(jay);
 
         // Burn of JAY
@@ -111,12 +111,12 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
         // Team fee
         backingToken.safeTransfer(FEE_ADDRESS, eth / FEES);
 
-        emit Price(block.timestamp, jay, eth);
+        emit Price(jay, eth);
     }
 
     // Buy Jay
     function buy(address reciever, uint256 amount) external nonReentrant {
-        require(start);
+        require(start, "contract not initiated");
         require(amount > MIN, "must trade over min");
 
 
@@ -128,7 +128,7 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
         // Team fee
         backingToken.safeTransfer(FEE_ADDRESS, amount / FEES);
 
-        emit Price(block.timestamp, jay, amount);
+        emit Price(jay, amount);
     }
 
     function JAYtoETH(uint256 value) public view returns (uint256) {
@@ -140,19 +140,19 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
     }
 
     function setFeeAddress(address _address) external onlyOwner {
-        require(_address != address(0x0));
+        require(_address != address(0x0), "cannot set to 0x0 address");
         FEE_ADDRESS = payable(_address);
     }
 
     function setSellFee(uint16 amount) external onlyOwner {
-        require(amount <= 9290);
-        require(amount > SELL_FEE);
+        require(amount <= 9290, "cant set less than 3% fee");
+        require(amount > SELL_FEE, "cant increase sell fee");
         SELL_FEE = amount;
         emit SellFeeUpdated(amount);
     }
 
     function setBuyFee(uint16 amount) external onlyOwner {
-        require(amount <= 9290 && amount >= 9000);
+        require(amount <= 9290 && amount >= 9000, "cant set less than 3% fee or greater than 5%");
         BUY_FEE = amount;
         emit buyFeeUpdated(amount);
     }
@@ -171,10 +171,4 @@ contract JayERC20Deriv is ERC20Burnable, Ownable, ReentrancyGuard {
             (totalSupply()) /
             (FEE_BASE_1000);
     }
-
-    function deposit() public payable {}
-
-    receive() external payable {}
-
-    fallback() external payable {}
 }

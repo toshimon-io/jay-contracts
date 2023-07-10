@@ -17,9 +17,10 @@ contract JayDerivFeeSplitter is Ownable, ReentrancyGuard {
     address public NFT_WALLET;
     address public JAY_WALLET;
 
-    uint256 public MIN;
+    uint256 public immutable MIN;
 
     constructor(address _rewardToken) {
+        require(_rewardToken != address(0x0), "cannot set to 0x0 address");
         rewardToken = IERC20(_rewardToken);
         MIN = 1 * 10 ** (IERC20Metadata(_rewardToken).decimals() - 3);
     }
@@ -41,21 +42,21 @@ contract JayDerivFeeSplitter is Ownable, ReentrancyGuard {
     }
 
     function setTEAMWallet(address _address) external onlyOwner {
-        require(_address != address(0x0));
+        require(_address != address(0x0), "cannot set to 0x0 address");
         TEAM_WALLET = _address;
     }
 
     function setJAYWallet(address _address) external onlyOwner {
-        require(_address != address(0x0));
+        require(_address != address(0x0), "cannot set to 0x0 address");
         JAY_WALLET = _address;
     }
     function setNFTWallet(address _address) external onlyOwner {
-        require(_address != address(0x0));
+        require(_address != address(0x0), "cannot set to 0x0 address");
         NFT_WALLET = _address;
     }
 
     function setLPWallet(address _address) external onlyOwner {
-        require(_address != address(0x0));
+        require(_address != address(0x0), "cannot set to 0x0 address");
         LP_WALLET = _address;
     }
 

@@ -35,15 +35,18 @@ contract JayDerivLiquidityStaking is ReentrancyGuard, Ownable {
 
     mapping(address => UserInfo) public userInfo;
 
-    bool public init = false;
+    bool public init;
 
-    bool public start = false;
+    bool public start;
 
     event Deposit(address indexed user, uint256 amount);
     event Harvest(address indexed user, uint256 harvestedAmount);
     event Withdraw(address indexed user, uint256 amount);
 
     constructor(address _liquidityToken, address _rewardToken, address _backingToken) {
+        require(_liquidityToken != address(0x0), "cannot set to 0x0 address");
+        require(_rewardToken != address(0x0), "cannot set to 0x0 address");
+        require(_backingToken != address(0x0), "cannot set to 0x0 address");
         liquidityToken = IERC20(_liquidityToken);
         rewardToken = IERC20(_rewardToken);
         backingToken = JayERC20Deriv(payable(_backingToken));
@@ -51,7 +54,7 @@ contract JayDerivLiquidityStaking is ReentrancyGuard, Ownable {
     }
 
     function setFeeAddress(address _address) external onlyOwner {
-        require(_address != address(0x0));
+        require(_address != address(0x0), "cannot set to 0x0 address");
         FEE_ADDRESS = JayDerivFeeSplitter(payable(_address));
     }
 
@@ -59,17 +62,22 @@ contract JayDerivLiquidityStaking is ReentrancyGuard, Ownable {
         uint256 _initialLPs,
         address[] memory _addresses,
         uint256[] memory _balances
-    ) public onlyOwner {
+    ) external onlyOwner {
         require(!init, "Contract already initialized");
         init = true;
         uint256 total = 0;
-        for (uint256 i = 0; i < _addresses.length; i++) {
+        uint256 _length = _addresses.length;
+        for (uint256 i = 0; i < _length;) {
             userInfo[_addresses[i]] = UserInfo({
                 shares: _balances[i],
                 rewardPerTokenOnEntry: 0
             });
 
             total += _balances[i];
+             unchecked {
+                i++;
+            }
+
         }
         require(total == _initialLPs, "Totals dont match");
         totalAmountStaked = total;
@@ -78,7 +86,7 @@ contract JayDerivLiquidityStaking is ReentrancyGuard, Ownable {
 
         
     // start trading
-    function setStart() public onlyOwner {
+    function setStart() external onlyOwner {
         start = true;
     }
 
@@ -156,7 +164,7 @@ contract JayDerivLiquidityStaking is ReentrancyGuard, Ownable {
      * @notice Withdraw staked tokens and collect reward tokens
      */
     function withdraw(uint256 amount) external nonReentrant {
-        require(start);
+        require(start, "contract not initiated");
         // Get the users pending rewards and update contract state
         uint256 pendingRewards = claim();
 
